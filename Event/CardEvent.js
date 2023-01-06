@@ -1,15 +1,18 @@
 import { getCardComponent, pendingCardToColumn } from '../Components/Card.js';
 import { modalShow } from '../Components/Modal.js';
+
 export const attachNewCardEvent = (newCardComponent, state, idx) => {
   const btnCancel = newCardComponent.querySelector('.btn-normal');
   const btnAccent = newCardComponent.querySelector('.btn-accent');
   const columnComponent = newCardComponent.closest(
     '.todo-list-column-container'
   );
+
   btnCancel.addEventListener('click', () => {
     newCardComponent.remove();
     state.toggleAddingState(idx);
   });
+
   btnAccent.addEventListener('click', () => {
     const title = newCardComponent.querySelector(
       '.todo-list-contents-header-text'

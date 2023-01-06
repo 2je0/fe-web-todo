@@ -1,4 +1,5 @@
-import { attachNewCardEvent } from '../Event/CardEvent.js';
+import { $, getCardIdxFromCard, getColumnIdxFromCard } from '../util.js';
+
 export const pendingCardToColumn = (cardComponent, columnComponent) => {
   const columnHeaderComponent = columnComponent.firstElementChild;
   columnHeaderComponent.insertAfter(cardComponent);
@@ -65,6 +66,12 @@ export const revertDeletingState = () => {
 };
 
 export const getDeletingCard = () => {
-  const card = document.querySelector('.content-delete');
+  const card = $('.content-delete');
   return card;
+};
+
+export const deleteCardDataInState = (deletingCard, state) => {
+  const columnIdx = getColumnIdxFromCard(deletingCard);
+  const cardIdx = getCardIdxFromCard(deletingCard);
+  state.deleteCard(columnIdx, cardIdx);
 };
