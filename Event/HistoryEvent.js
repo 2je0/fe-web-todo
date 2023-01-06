@@ -1,11 +1,14 @@
 import { $ } from '../util.js';
 const btnHistoryTab = $('.todo-list-header-button');
+const btnHistoryClose = $('#btn-history-close');
 const menu = $('menu');
 
-btnHistoryTab.addEventListener('click', () => {
-  menu.classList.remove('sidebar-hidden');
-});
-const btnHistoryClose = $('#btn-history-close');
-btnHistoryClose.addEventListener('click', () => {
-  menu.classList.add('sidebar-hidden');
-});
+export const historyTabEventHandler = () => {
+  btnHistoryTab.addEventListener('click', () => {
+    menu.classList.remove('sidebar-hidden');
+  });
+
+  btnHistoryClose.addEventListener('click', () => {
+    menu.classList.add('sidebar-hidden');
+  });
+};
