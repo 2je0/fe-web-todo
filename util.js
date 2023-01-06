@@ -5,7 +5,12 @@ Object.prototype.insertAfter = function (newNode) {
     this.parentNode.appendChild(newNode);
   }
 };
+Object.prototype.exchangeNode = function (node) {
+  this.insertAfter(node);
+  this.remove();
+};
 export const $ = (select) => document.querySelector(select);
+export const $All = (select) => document.querySelectorAll(select);
 
 export const getColumnIdxFromCard = (cardComponent) => {
   const columnComponent = cardComponent.closest('.todo-list-column-container');
