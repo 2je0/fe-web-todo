@@ -5,7 +5,7 @@ Object.prototype.insertAfter = function (newNode) {
     this.parentNode.appendChild(newNode);
   }
 };
-
+export const $ = (select) => document.querySelector(select);
 export const getColumnIdxFromCard = (cardComponent) => {
   const columnComponent = cardComponent.closest('.todo-list-column-container');
   return getColumnIdxFromColumn(columnComponent);
