@@ -1,4 +1,8 @@
-import { getCardComponent, pendingCardToColumn } from '../Components/Card.js';
+import {
+  getCardComponent,
+  addCardToColumn,
+  getCardData,
+} from '../Components/Card.js';
 import { modalShow } from '../Components/Modal.js';
 
 export const attachNewCardEvent = (newCardComponent, state, idx) => {
@@ -17,17 +21,13 @@ export const attachNewCardEvent = (newCardComponent, state, idx) => {
     const title = newCardComponent.querySelector(
       '.todo-list-contents-header-text'
     ).value;
-    const desc = newCardComponent.querySelector(
+    const details = newCardComponent.querySelector(
       '.todo-list-contents-desc-container'
     ).value;
-    const cardData = {
-      title,
-      details: [desc],
-      footer: 'author by web',
-    };
+    const cardData = getCardData(title, details);
     const cardComponent = getCardComponent(cardData);
     attachCardEvent(cardComponent);
-    pendingCardToColumn(cardComponent, columnComponent);
+    addCardToColumn(cardComponent, columnComponent);
     newCardComponent.remove();
     state.toggleAddingState(idx);
     state.addCardData(idx, cardData);

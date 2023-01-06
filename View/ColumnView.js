@@ -1,9 +1,6 @@
 import { getColumnComponent } from '../Components/Column.js';
 import { getColumnIdxFromColumn } from '../util.js';
-import {
-  getNewCardComponent,
-  pendingCardToColumn,
-} from '../Components/Card.js';
+import { getNewCardComponent, addCardToColumn } from '../Components/Card.js';
 import { attachNewCardEvent } from '../Event/CardEvent.js';
 
 export const addNewColumn = (state) => {
@@ -29,13 +26,14 @@ const attachColumnEvent = (state, columnComponent) => {
   });
 
   const btnAddCard = columnComponent.querySelector('.column-btn-plus');
+
   btnAddCard.addEventListener('click', () => {
     const addingState = state.getAddingCardState(columnIdx);
     const newCard = columnComponent.firstChild.nextElementSibling;
     if (addingState) newCard.remove();
     if (!addingState) {
       const newCardComponent = getNewCardComponent();
-      pendingCardToColumn(newCardComponent, columnComponent);
+      addCardToColumn(newCardComponent, columnComponent);
       attachNewCardEvent(newCardComponent, state, columnIdx);
     }
     state.toggleAddingState(columnIdx);

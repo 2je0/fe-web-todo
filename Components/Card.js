@@ -1,6 +1,8 @@
 import { $, getCardIdxFromCard, getColumnIdxFromCard } from '../util.js';
-
-export const pendingCardToColumn = (cardComponent, columnComponent) => {
+export const getCardData = (title, detailsText, footer = 'author by web') => {
+  return { title, details: detailsText.split('\n'), footer };
+};
+export const addCardToColumn = (cardComponent, columnComponent) => {
   const columnHeaderComponent = columnComponent.firstElementChild;
   columnHeaderComponent.insertAfter(cardComponent);
 };
