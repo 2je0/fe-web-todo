@@ -2,9 +2,10 @@ import {
   getDeletingCard,
   revertDeletingState,
   deleteCardDataInState,
+  cardCountingUpdate,
 } from '../Components/Card.js';
 import { modalHide } from '../Components/Modal.js';
-import { $ } from '../util.js';
+import { $, getColumnIdxFromCard } from '../util.js';
 
 const overlay = $('.overlay');
 const btnModalDeleteAccent = $('.modal-container').querySelector('.btn-accent');
@@ -23,8 +24,10 @@ export const modalEventHandler = (state) => {
 
   btnModalDeleteAccent.addEventListener('click', () => {
     const deletingCard = getDeletingCard();
+    const columnIdx = getColumnIdxFromCard(deletingCard);
     deleteCardDataInState(deletingCard, state);
     deletingCard.remove();
+    cardCountingUpdate(state, columnIdx);
     modalHide();
   });
 };
