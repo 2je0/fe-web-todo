@@ -1,7 +1,7 @@
 import {
   getCardComponent,
-  addCardToColumn,
   getCardData,
+  cardCountingUpdate,
 } from '../Components/Card.js';
 import { modalShow } from '../Components/Modal.js';
 
@@ -29,9 +29,7 @@ export const attachNewCardEvent = (newCardComponent, state, idx) => {
     state.toggleAddingState(idx);
     state.addCardData(idx, cardData);
 
-    const countingCard = document.querySelectorAll('.todo-list-count');
-    const columnCountComponent = countingCard[idx];
-    columnCountComponent.textContent = state.getNumOfCards(idx);
+    cardCountingUpdate(state, idx);
   });
 };
 

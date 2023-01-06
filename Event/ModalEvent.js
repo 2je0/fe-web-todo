@@ -2,6 +2,7 @@ import {
   getDeletingCard,
   revertDeletingState,
   deleteCardDataInState,
+  cardCountingUpdate,
 } from '../Components/Card.js';
 import { modalHide } from '../Components/Modal.js';
 import { $ } from '../util.js';
@@ -25,6 +26,7 @@ export const modalEventHandler = (state) => {
     const deletingCard = getDeletingCard();
     deleteCardDataInState(deletingCard, state);
     deletingCard.remove();
+    cardCountingUpdate(state, columnIdx);
     modalHide();
   });
 };

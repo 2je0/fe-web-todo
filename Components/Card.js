@@ -6,7 +6,11 @@ export const addCardToColumn = (cardComponent, columnComponent) => {
   const columnHeaderComponent = columnComponent.firstElementChild;
   columnHeaderComponent.insertAfter(cardComponent);
 };
-
+export const cardCountingUpdate = (state, columnIdx) => {
+  const countingCard = document.querySelectorAll('.todo-list-count');
+  const columnCountComponent = countingCard[columnIdx];
+  columnCountComponent.textContent = state.getNumOfCards(columnIdx);
+};
 export const getNewCardComponent = () => {
   const node = document.createElement('div');
   node.classList.add('todo-list-contents-container');
