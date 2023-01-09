@@ -1,6 +1,6 @@
 import Component from '../core/Component.js';
 
-export default class Header extends Component {
+export default class TodoList extends Component {
   setup() {}
 
   template() {
@@ -23,15 +23,5 @@ export default class Header extends Component {
           </button>
         </nav>
     `;
-  }
-  setEvent() {
-    this.addEvent('click', '.todo-list-header-button', () => {
-      this.showSidebar();
-    });
-  }
-
-  showSidebar() {
-    const header = document.querySelector('menu');
-    header.classList.remove('sidebar-hidden');
   }
 }

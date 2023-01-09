@@ -85,6 +85,11 @@ menu {
   height: 100%;
   padding: 0 80px;
 }
+#app {
+  display: flex;
+  height: 100%;
+  overflow: scroll;
+}
 .main-container {
   display: flex;
   height: 100%;

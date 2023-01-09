@@ -22,7 +22,7 @@ export default class Sidebar extends Component {
               </svg>
             </button>
           </div>
-          <ul class="menu-history-container">
+          <ul >
             <li>
               <img src="./asset/user-img.svg" />
               <div class="history-content-container">
@@ -40,4 +40,11 @@ export default class Sidebar extends Component {
   }
 
   mounted() {}
+
+  setEvent() {
+    this.addEvent('click', '#btn-history-close', () => {
+      const header = document.querySelector('menu');
+      header.classList.add('sidebar-hidden');
+    });
+  }
 }
