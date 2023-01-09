@@ -1,3 +1,4 @@
+import { nthChild } from '../../util.js';
 import Component from '../core/Component.js';
 import Card from './Card.js';
 
@@ -55,9 +56,36 @@ export default class Column extends Component {
     const $cards = this.$target.querySelectorAll(
       '.todo-list-contents-container'
     );
-
     $cards.forEach(($card, idx) => {
-      new Card($card, { card: this.$props.column.cards[idx] });
+      new Card($card, {
+        card: this.$props.column.cards[idx],
+        deleteCard: this.$props.deleteCard,
+      });
+    });
+  }
+
+  setEvent() {
+    this.addEvent('click', '.column-btn-plus', ({ target }) => {
+      const columns = this.$target.parentNode.querySelectorAll(
+        '.todo-list-column-container'
+      );
+      const columnIdx = nthChild(columns, this.$target);
+
+      const dummyCard = {
+        title: 'gitHub 공부하기',
+        details: ['gitbub 공부내용', 'gitbub 공부내용'],
+        footer: 'author by web',
+      };
+
+      this.$props.addCard(columnIdx, dummyCard);
+    });
+
+    this.addEvent('click', '.column-btn-x', ({ target }) => {
+      const columns = this.$target.parentNode.querySelectorAll(
+        '.todo-list-column-container'
+      );
+      const columnIdx = nthChild(columns, this.$target);
+      this.$props.deleteColumn(columnIdx);
     });
   }
 }

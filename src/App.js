@@ -52,6 +52,39 @@ export default class App extends Component {
     const $sidebar = this.$target.querySelector('menu');
 
     new Sidebar($sidebar, { history: this.$state.history });
-    new TodoListApp($todoListApp, { columns: this.$state.columns });
+    new TodoListApp($todoListApp, {
+      columns: this.$state.columns,
+      addCard: this.addCard.bind(this),
+      deleteCard: this.deleteCard.bind(this),
+      deleteColumn: this.deleteColumn.bind(this),
+    });
+  }
+  setEvent() {
+    this.addEvent('click', '.fab', () => {
+      const newColumnData = {
+        title: '제목 없음',
+        cards: [],
+        addingState: false,
+      };
+      this.setState({ columns: [newColumnData, ...this.$state.columns] });
+    });
+  }
+
+  addCard(columnIdx, card) {
+    const newColumn = [...this.$state.columns];
+    newColumn[columnIdx].cards.unshift(card);
+    this.setState({ columns: newColumn });
+  }
+
+  deleteColumn(columnIdx) {
+    const newColumn = [...this.$state.columns];
+    newColumn.splice(columnIdx, 1);
+    this.setState({ columns: newColumn });
+  }
+
+  deleteCard(columnIdx, cardIdx) {
+    const newColumn = [...this.$state.columns];
+    newColumn[columnIdx].cards.splice(cardIdx, 1);
+    this.setState({ columns: newColumn });
   }
 }

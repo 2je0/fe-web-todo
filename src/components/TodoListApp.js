@@ -1,5 +1,4 @@
 import Component from '../core/Component.js';
-import Card from './Card.js';
 import Column from './Column.js';
 import Header from './Header.js';
 export default class TodoListApp extends Component {
@@ -23,7 +22,12 @@ export default class TodoListApp extends Component {
       '.todo-list-column-container'
     );
     $columns.forEach(($column, idx) => {
-      new Column($column, { column: this.$props.columns[idx] });
+      new Column($column, {
+        column: this.$props.columns[idx],
+        addCard: this.$props.addCard,
+        deleteCard: this.$props.deleteCard,
+        deleteColumn: this.$props.deleteColumn,
+      });
     });
   }
 }

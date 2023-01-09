@@ -1,3 +1,4 @@
+import { getCardIdxFromCard, getColumnIdxFromColumn } from '../../util.js';
 import Component from '../core/Component.js';
 
 export default class Card extends Component {
@@ -32,5 +33,13 @@ export default class Card extends Component {
     `;
   }
 
-  mounted() {}
+  setEvent() {
+    this.addEvent('click', '.btn-card-x', ({ target }) => {
+      const card = this.$target;
+      const column = card.closest('.todo-list-column-container');
+      const columnIdx = getColumnIdxFromColumn(column);
+      const cardIdx = getCardIdxFromCard(card);
+      this.$props.deleteCard(columnIdx, cardIdx);
+    });
+  }
 }
