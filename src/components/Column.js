@@ -8,13 +8,7 @@ const dummyCard = {
   footer: 'author by web',
 };
 export default class Column extends Component {
-  setup() {
-    this.$state = {
-      title: '해야할 일',
-      cards: [dummyCard, dummyCard],
-      addingState: false,
-    };
-  }
+  setup() {}
 
   template() {
     const column = this.$props.column;
@@ -57,7 +51,8 @@ export default class Column extends Component {
       </button>
     </div>
   </div>
-  <div class="todo-list-contents-container content-new hidden"></div>
+  <div class="new-card-container"></div>
+  
   ${column.cards
     .map(() => `<div class="todo-list-contents-container"></div>`)
     .join('')}
@@ -75,24 +70,24 @@ export default class Column extends Component {
       });
     });
 
-    const $newCard = this.$target.querySelector('.content-new');
-    new NewCard($newCard, {
-      addCard: this.$props.addCard,
-    });
+    const $newCard = this.$target.querySelector('.new-card-container');
+    if (this.$props.column.addingState)
+      new NewCard($newCard, {
+        addCard: this.$props.addCard,
+        cancelAddingState: this.$props.cancelAddingState,
+      });
   }
 
   setEvent() {
-    this.addEvent('click', '.column-btn-plus', ({ target }) => {
-      const newCard = this.$target.querySelector('.content-new');
-      const [, , isNewCardHidden] = newCard.classList;
-      if (isNewCardHidden) {
-        newCard.classList.remove('hidden');
-      } else {
-        newCard.classList.add('hidden');
-      }
+    this.addEvent('click', '.column-btn-plus', () => {
+      const columns = this.$target.parentNode.querySelectorAll(
+        '.todo-list-column-container'
+      );
+      const columnIdx = nthChild(columns, this.$target);
+      this.$props.toggleNewCard(columnIdx);
     });
 
-    this.addEvent('click', '.column-btn-x', ({ target }) => {
+    this.addEvent('click', '.column-btn-x', () => {
       const columns = this.$target.parentNode.querySelectorAll(
         '.todo-list-column-container'
       );

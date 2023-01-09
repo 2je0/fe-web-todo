@@ -27,6 +27,8 @@ export default class TodoListApp extends Component {
         addCard: this.$props.addCard,
         deleteCard: this.$props.deleteCard,
         deleteColumn: this.$props.deleteColumn,
+        toggleNewCard: this.$props.toggleNewCard,
+        cancelAddingState: this.$props.cancelAddingState,
       });
     });
   }

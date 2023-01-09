@@ -57,6 +57,8 @@ export default class App extends Component {
       addCard: this.addCard.bind(this),
       deleteCard: this.deleteCard.bind(this),
       deleteColumn: this.deleteColumn.bind(this),
+      toggleNewCard: this.toggleNewCard.bind(this),
+      cancelAddingState: this.cancelAddingState.bind(this),
     });
   }
   setEvent() {
@@ -70,9 +72,16 @@ export default class App extends Component {
     });
   }
 
+  toggleNewCard(columnIdx) {
+    const newColumn = [...this.$state.columns];
+    newColumn[columnIdx].addingState = !newColumn[columnIdx].addingState;
+    this.setState({ columns: newColumn });
+  }
+
   addCard(columnIdx, card) {
     const newColumn = [...this.$state.columns];
     newColumn[columnIdx].cards.unshift(card);
+    newColumn[columnIdx].addingState = !newColumn[columnIdx].addingState;
     this.setState({ columns: newColumn });
   }
 
@@ -85,6 +94,12 @@ export default class App extends Component {
   deleteCard(columnIdx, cardIdx) {
     const newColumn = [...this.$state.columns];
     newColumn[columnIdx].cards.splice(cardIdx, 1);
+    this.setState({ columns: newColumn });
+  }
+
+  cancelAddingState(columnIdx) {
+    const newColumn = [...this.$state.columns];
+    newColumn[columnIdx].addingState = !newColumn[columnIdx].addingState;
     this.setState({ columns: newColumn });
   }
 }
