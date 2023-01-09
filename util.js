@@ -27,7 +27,7 @@ export const getColumnIdxFromColumn = (columnComponent) => {
 export const getCardIdxFromCard = (cardComponent) => {
   const columnComponent = cardComponent.closest('.todo-list-column-container');
   const cardComponents = columnComponent.querySelectorAll(
-    '.todo-list-contents-container'
+    '.todo-list-contents-container:not(.content-new)'
   );
   return nthChild(cardComponents, cardComponent);
 };
@@ -55,5 +55,6 @@ export const getDeletingCard = () => {
 
 export const revertDeletingState = () => {
   const deletingCard = getDeletingCard();
+  if (!deletingCard) return;
   deletingCard.classList.remove('content-delete');
 };
