@@ -38,10 +38,21 @@ export default class Card extends Component {
   }
 
   setEvent() {
-    this.addEvent('click', '.btn-card-x', () => {
+    this.addEvent('click', '.btn-card-x', (e) => {
       const card = this.$target;
       card.classList.add('content-delete');
       modalShow();
+    });
+
+    this.addEvent('mouseover', '.btn-card-x', () => {
+      const card = this.$target;
+      card.classList.add('content-delete2');
+    });
+
+
+    this.addEvent('mouseout', '.btn-card-x', () => {
+      const card = this.$target;
+      card.classList.remove('content-delete2');
     });
   }
 }
