@@ -93,6 +93,7 @@ menu {
 
 .todo-list-header-container {
   height: 112px;
+  width: 100%;
   padding: 33px 0px;
   display: flex;
   justify-content: space-between;
