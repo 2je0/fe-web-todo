@@ -37,3 +37,23 @@ export const nthChild = (arr, target) => {
     if (arr[i] === target) return i;
   }
 };
+
+export const modalShow = () => {
+  const modalContainer = document.querySelector('.modal-container');
+  modalContainer.classList.remove('modal-hidden');
+};
+
+export const modalHide = () => {
+  const modalContainer = document.querySelector('.modal-container');
+  modalContainer.classList.add('modal-hidden');
+};
+
+export const getDeletingCard = () => {
+  const card = $('.content-delete');
+  return card;
+};
+
+export const revertDeletingState = () => {
+  const deletingCard = getDeletingCard();
+  deletingCard.classList.remove('content-delete');
+};

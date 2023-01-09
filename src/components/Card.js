@@ -1,4 +1,8 @@
-import { getCardIdxFromCard, getColumnIdxFromColumn } from '../../util.js';
+import {
+  getCardIdxFromCard,
+  getColumnIdxFromColumn,
+  modalShow,
+} from '../../util.js';
 import Component from '../core/Component.js';
 
 export default class Card extends Component {
@@ -34,12 +38,10 @@ export default class Card extends Component {
   }
 
   setEvent() {
-    this.addEvent('click', '.btn-card-x', ({ target }) => {
+    this.addEvent('click', '.btn-card-x', () => {
       const card = this.$target;
-      const column = card.closest('.todo-list-column-container');
-      const columnIdx = getColumnIdxFromColumn(column);
-      const cardIdx = getCardIdxFromCard(card);
-      this.$props.deleteCard(columnIdx, cardIdx);
+      card.classList.add('content-delete');
+      modalShow();
     });
   }
 }

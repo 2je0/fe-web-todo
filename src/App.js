@@ -1,6 +1,7 @@
 import Component from './core/Component.js';
 import TodoListApp from './components/TodoListApp.js';
 import Sidebar from './components/Sidebar.js';
+import Modal from './components/Modal.js';
 
 const dummyCard = {
   title: 'gitHub 공부하기',
@@ -50,6 +51,7 @@ export default class App extends Component {
   mounted() {
     const $todoListApp = this.$target.querySelector('.todo-list-container');
     const $sidebar = this.$target.querySelector('menu');
+    const $modal = this.$target.querySelector('.modal-container');
 
     new Sidebar($sidebar, { history: this.$state.history });
     new TodoListApp($todoListApp, {
@@ -60,7 +62,11 @@ export default class App extends Component {
       toggleNewCard: this.toggleNewCard.bind(this),
       cancelAddingState: this.cancelAddingState.bind(this),
     });
+    new Modal($modal, {
+      deleteCard: this.deleteCard.bind(this),
+    });
   }
+
   setEvent() {
     this.addEvent('click', '.fab', () => {
       const newColumnData = {
