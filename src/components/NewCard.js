@@ -49,5 +49,23 @@ export default class NewCard extends Component {
       const columnIdx = getColumnIdxFromColumn(column);
       this.$props.cancelAddingState(columnIdx);
     });
+
+    this.addEvent(
+      'keyup',
+      '.todo-list-contents-desc-container',
+      ({ key, target }) => {
+        if (key === 'Enter') {
+          const node = document.createElement('input');
+          node.classList.add('todo-list-contents-desc-container');
+          node.placeholder = '내용을 입력하세요';
+          target.insertAfter(node);
+          node.focus();
+        }
+        if (key === 'Backspace' && target.value === '') {
+          target.previousSibling.focus();
+          target.remove();
+        }
+      }
+    );
   }
 }
