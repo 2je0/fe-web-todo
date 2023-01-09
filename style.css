@@ -371,3 +371,7 @@ menu {
   display: flex;
   opacity: 50%;
 }
+
+.hidden {
+  display: none;
+}

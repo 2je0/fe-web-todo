@@ -1,9 +1,20 @@
 import { nthChild } from '../../util.js';
 import Component from '../core/Component.js';
 import Card from './Card.js';
-
+import NewCard from './NewCard.js';
+const dummyCard = {
+  title: 'gitHub 공부하기',
+  details: ['gitbub 공부내용', 'gitbub 공부내용'],
+  footer: 'author by web',
+};
 export default class Column extends Component {
-  setup() {}
+  setup() {
+    this.$state = {
+      title: '해야할 일',
+      cards: [dummyCard, dummyCard],
+      addingState: false,
+    };
+  }
 
   template() {
     const column = this.$props.column;
@@ -46,15 +57,16 @@ export default class Column extends Component {
       </button>
     </div>
   </div>
+  <div class="todo-list-contents-container content-new hidden"></div>
   ${column.cards
-    .map(() => `<div class="todo-list-contents-container">qq</div>`)
+    .map(() => `<div class="todo-list-contents-container"></div>`)
     .join('')}
   `;
   }
 
   mounted() {
     const $cards = this.$target.querySelectorAll(
-      '.todo-list-contents-container'
+      '.todo-list-contents-container:not(.content-new)'
     );
     $cards.forEach(($card, idx) => {
       new Card($card, {
@@ -62,22 +74,22 @@ export default class Column extends Component {
         deleteCard: this.$props.deleteCard,
       });
     });
+
+    const $newCard = this.$target.querySelector('.content-new');
+    new NewCard($newCard, {
+      addCard: this.$props.addCard,
+    });
   }
 
   setEvent() {
     this.addEvent('click', '.column-btn-plus', ({ target }) => {
-      const columns = this.$target.parentNode.querySelectorAll(
-        '.todo-list-column-container'
-      );
-      const columnIdx = nthChild(columns, this.$target);
-
-      const dummyCard = {
-        title: 'gitHub 공부하기',
-        details: ['gitbub 공부내용', 'gitbub 공부내용'],
-        footer: 'author by web',
-      };
-
-      this.$props.addCard(columnIdx, dummyCard);
+      const newCard = this.$target.querySelector('.content-new');
+      const [, , isNewCardHidden] = newCard.classList;
+      if (isNewCardHidden) {
+        newCard.classList.remove('hidden');
+      } else {
+        newCard.classList.add('hidden');
+      }
     });
 
     this.addEvent('click', '.column-btn-x', ({ target }) => {
