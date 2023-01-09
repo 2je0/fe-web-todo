@@ -57,10 +57,10 @@ export default class App extends Component {
     new TodoListApp($todoListApp, {
       columns: this.$state.columns,
       addCard: this.addCard.bind(this),
-      deleteCard: this.deleteCard.bind(this),
       deleteColumn: this.deleteColumn.bind(this),
       toggleNewCard: this.toggleNewCard.bind(this),
       cancelAddingState: this.cancelAddingState.bind(this),
+      modifyColumnTitle: this.modifyColumnTitle.bind(this),
     });
     new Modal($modal, {
       deleteCard: this.deleteCard.bind(this),
@@ -106,6 +106,12 @@ export default class App extends Component {
   cancelAddingState(columnIdx) {
     const newColumn = [...this.$state.columns];
     newColumn[columnIdx].addingState = !newColumn[columnIdx].addingState;
+    this.setState({ columns: newColumn });
+  }
+
+  modifyColumnTitle(columnIdx, newTitle) {
+    const newColumn = [...this.$state.columns];
+    newColumn[columnIdx].title = newTitle;
     this.setState({ columns: newColumn });
   }
 }

@@ -1,4 +1,4 @@
-import { nthChild } from '../../util.js';
+import { getColumnIdxFromColumn, nthChild } from '../../util.js';
 import Component from '../core/Component.js';
 import Card from './Card.js';
 import NewCard from './NewCard.js';
@@ -15,7 +15,9 @@ export default class Column extends Component {
     return `
     <div class="todo-list-column-header-container">
     <div class="todo-list-column-left">
-      <div class="todo-list-column-header-text">${column.title}</div>
+      <input class="todo-list-column-header-text" value=${
+        column.title
+      } readonly>
       <div class="todo-list-column-count-container">
         <div class="todo-list-count">${column.cards.length}</div>
       </div>
@@ -54,7 +56,9 @@ export default class Column extends Component {
   <div class="new-card-container"></div>
   
   ${column.cards
-    .map(() => `<div class="todo-list-contents-container"></div>`)
+    .map(
+      () => `<div class="todo-list-contents-container" draggable="true"></div>`
+    )
     .join('')}
   `;
   }
@@ -94,5 +98,30 @@ export default class Column extends Component {
       const columnIdx = nthChild(columns, this.$target);
       this.$props.deleteColumn(columnIdx);
     });
+
+    this.addEvent('dblclick', '.todo-list-column-header-text', ({ target }) => {
+      target.readOnly = false;
+      target.classList.add('outline');
+    });
+
+    this.addEvent(
+      'keyup',
+      '.todo-list-column-header-text',
+      ({ key, target }) => {
+        if (key !== 'Enter') return;
+        this.exitModifyColumnTitle(target);
+      }
+    );
+
+    this.addEvent('focusout', '.todo-list-column-header-text', ({ target }) => {
+      this.exitModifyColumnTitle(target);
+    });
+  }
+
+  exitModifyColumnTitle(target) {
+    target.readOnly = true;
+    target.classList.remove('outline');
+    const columnIdx = getColumnIdxFromColumn(this.$target);
+    this.$props.modifyColumnTitle(columnIdx, target.value);
   }
 }

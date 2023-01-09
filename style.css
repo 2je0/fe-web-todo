@@ -17,6 +17,15 @@ body {
   color: #010101;
   overflow: hidden;
 }
+input {
+  background-color: inherit;
+  border: none;
+  outline: none;
+}
+
+.outline {
+  border-bottom: #00529b solid;
+}
 
 .sidebar-hidden {
   right: -450px;

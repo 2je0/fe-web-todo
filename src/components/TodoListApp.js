@@ -25,10 +25,10 @@ export default class TodoListApp extends Component {
       new Column($column, {
         column: this.$props.columns[idx],
         addCard: this.$props.addCard,
-        deleteCard: this.$props.deleteCard,
         deleteColumn: this.$props.deleteColumn,
         toggleNewCard: this.$props.toggleNewCard,
         cancelAddingState: this.$props.cancelAddingState,
+        modifyColumnTitle: this.$props.modifyColumnTitle,
       });
     });
   }
