@@ -241,6 +241,14 @@ menu {
 .content-delete path {
   fill: #ff4343;
 }
+
+.content-delete2 {
+  background: #ffeeec;
+  border: 1px solid #ff4343;
+}
+.content-delete2 path {
+  fill: #ff4343;
+}
 .content-new {
   border: 1px solid #0075de;
 }
