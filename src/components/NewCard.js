@@ -17,9 +17,9 @@ export default class NewCard extends Component {
     class="todo-list-contents-desc-container"
     placeholder="내용을 입력하세요"
   />
-  <div class="todo-list-new-contents-btn-container">
+  <div class="todo-list-new-contents-btn-container ">
     <button class="btn btn-normal">취소</button>
-    <button class="btn btn-accent">등록</button>
+    <button class="btn btn-accent" disabled>등록</button>
   </div>
   </div>
     `;
@@ -54,7 +54,7 @@ export default class NewCard extends Component {
       'keyup',
       '.todo-list-contents-desc-container',
       ({ key, target }) => {
-        if (key === 'Enter') {
+        if (key === 'Enter' && target.value.trim() !== '') {
           const node = document.createElement('input');
           node.classList.add('todo-list-contents-desc-container');
           node.placeholder = '내용을 입력하세요';
@@ -67,5 +67,11 @@ export default class NewCard extends Component {
         }
       }
     );
+
+    this.addEvent('keyup', '.todo-list-contents-header-text', ({ target }) => {
+      const $btn = this.$target.querySelector('.btn-accent');
+      if (target.value.trim() !== '') $btn.disabled = false;
+      else $btn.disabled = true;
+    });
   }
 }
