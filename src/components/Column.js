@@ -1,12 +1,8 @@
-import { getColumnIdxFromColumn, nthChild } from '../../util.js';
 import Component from '../core/Component.js';
+import PropertyFinder from '../util/PropertyFinder.js';
 import Card from './Card.js';
 import NewCard from './NewCard.js';
-const dummyCard = {
-  title: 'gitHub 공부하기',
-  details: ['gitbub 공부내용', 'gitbub 공부내용'],
-  footer: 'author by web',
-};
+
 export default class Column extends Component {
   setup() {}
 
@@ -81,19 +77,15 @@ export default class Column extends Component {
   }
 
   setEvent() {
-    this.addEvent('click', '.column-btn-plus', () => {
-      const columns = this.$target.parentNode.querySelectorAll(
-        '.todo-list-column-container'
-      );
-      const columnIdx = nthChild(columns, this.$target);
+    this.addEvent('click', '.column-btn-plus', ({ target }) => {
+      const targetProperty = new PropertyFinder(target);
+      const columnIdx = targetProperty.getColumnIdx();
       this.$props.toggleNewCard(columnIdx);
     });
 
-    this.addEvent('click', '.column-btn-x', () => {
-      const columns = this.$target.parentNode.querySelectorAll(
-        '.todo-list-column-container'
-      );
-      const columnIdx = nthChild(columns, this.$target);
+    this.addEvent('click', '.column-btn-x', ({ target }) => {
+      const targetProperty = new PropertyFinder(target);
+      const columnIdx = targetProperty.getColumnIdx();
       this.$props.deleteColumn(columnIdx);
     });
 
@@ -117,9 +109,10 @@ export default class Column extends Component {
   }
 
   exitModifyColumnTitle(target) {
+    const targetProperty = new PropertyFinder(target);
     target.readOnly = true;
     target.classList.remove('outline');
-    const columnIdx = getColumnIdxFromColumn(this.$target);
+    const columnIdx = targetProperty.getColumnIdx();
     this.$props.modifyColumnTitle(columnIdx, target.value);
   }
 }
