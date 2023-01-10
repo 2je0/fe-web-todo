@@ -1,16 +1,12 @@
-import {
-  getCardIdxFromCard,
-  getColumnIdxFromColumn,
-  nthChild,
-} from '../../util.js';
 import Component from '../core/Component.js';
+import PropertyFinder from '../util/PropertyFinder.js';
 
 export default class NewCard extends Component {
   setup() {}
 
   template() {
-    const card = this.$props?.card;
-    const title = card?.title || '';
+    const { details } = this.$props?.card || [];
+
     return `
     <div class="todo-list-contents-container content-new">
     <div class="todo-list-contents-header-container">
@@ -31,9 +27,9 @@ export default class NewCard extends Component {
     `;
   }
   mounted() {
-    const card = this.$props.card;
+    const cardData = this.$props.card;
     const $accentBtn = this.$target.querySelector('.btn-accent');
-    const title = card?.title || '';
+    const title = cardData?.title || '';
     if (title) $accentBtn.disabled = false;
     const $title = this.$target.querySelector(
       '.todo-list-contents-header-text'
@@ -43,43 +39,19 @@ export default class NewCard extends Component {
 
   setEvent() {
     this.addEvent('click', '.btn-accent', ({ target }) => {
-      const $card = target.closest('.card-container');
-      const ismodifying = $card && $card.classList.contains('modifying');
-
-      const column = this.$target.parentNode;
-      const columnIdx = getColumnIdxFromColumn(column);
-      const card =
-        target.closest('.new-card-container') ||
-        target.closest('.card-container');
-      const title = card.querySelector('.todo-list-contents-header-text').value;
-      const details = card.querySelectorAll(
-        '.todo-list-contents-desc-container'
-      );
-      //TODO: details.map -> map은 왜 안되는지...?
-      const desc = [];
-      details.forEach((ele) => {
-        desc.push(ele.value);
-      });
-
-      const newCard = {
-        title,
-        details: desc,
-        footer: 'author by web',
-      };
-
-      if (ismodifying) {
-        const cardIdx = getCardIdxFromCard(card);
-        this.$props.modifyCard(columnIdx, cardIdx, newCard);
-        return;
-      }
-
-      this.$props.addCard(columnIdx, newCard);
+      const targetProperty = new PropertyFinder(target);
+      const { columnIdx, cardIdx, cardData, isModifying } =
+        targetProperty.getAllProperty();
+      if (isModifying) this.$props.modifyCard(columnIdx, cardIdx, cardData);
+      if (!isModifying) this.$props.addCard(columnIdx, cardData);
     });
 
-    this.addEvent('click', '.btn-normal', () => {
-      console.log('asdf');
-      const column = this.$target.parentNode;
-      const columnIdx = getColumnIdxFromColumn(column);
+    this.addEvent('click', '.btn-normal', ({ target }) => {
+      const targetProperty = new PropertyFinder(target);
+      const { isModifying, columnIdx } = targetProperty.getAllProperty();
+      if (isModifying) {
+        return;
+      }
       this.$props.cancelAddingState(columnIdx);
     });
 
