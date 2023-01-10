@@ -72,7 +72,7 @@ export const revertDeletingState = () => {
 };
 
 export const getDeletingCard = () => {
-  const card = $('.content-delete');
+  const card = $('.content-delete').closest('.card-container');
   return card;
 };
 

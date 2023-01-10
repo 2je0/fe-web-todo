@@ -56,21 +56,19 @@ export default class Column extends Component {
   <div class="new-card-container"></div>
   
   ${column.cards
-    .map(
-      () => `<div class="todo-list-contents-container" draggable="true"></div>`
-    )
+    .map(() => `<div class="card-container" draggable="true"></div>`)
     .join('')}
   `;
   }
 
   mounted() {
-    const $cards = this.$target.querySelectorAll(
-      '.todo-list-contents-container:not(.content-new)'
-    );
+    const $cards = this.$target.querySelectorAll('.card-container');
     $cards.forEach(($card, idx) => {
       new Card($card, {
         card: this.$props.column.cards[idx],
         deleteCard: this.$props.deleteCard,
+        addCard: this.$props.addCard,
+        modifyCard: this.$props.modifyCard,
       });
     });
 
