@@ -9,7 +9,6 @@ button {
   border: none;
   cursor: pointer;
 }
-
 button:disabled {
   opacity: 50%;
 }
@@ -246,11 +245,11 @@ menu {
   fill: #ff4343;
 }
 
-.content-delete2 {
+.content-delete-hover {
   background: #ffeeec;
   border: 1px solid #ff4343;
 }
-.content-delete2 path {
+.content-delete-hover path {
   fill: #ff4343;
 }
 .content-new {
@@ -390,10 +389,6 @@ menu {
 
 .todo-list-new-contents-btn-container {
   display: flex;
-}
-
-.card-no-data {
-  opacity: 50%;
 }
 
 .hidden {
