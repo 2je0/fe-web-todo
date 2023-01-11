@@ -26,6 +26,7 @@ export default class NewCard extends Component {
     <input
       class="todo-list-contents-header-text"
       placeholder="제목을 입력하세요"
+      value="${this.$state.title}"
     />
   </div>
   <ul class="todo-list-contents-desc-container">
@@ -44,10 +45,6 @@ export default class NewCard extends Component {
     const $accentBtn = this.$target.querySelector('.btn-accent');
     const title = cardData?.title || '';
     if (title) $accentBtn.disabled = false;
-    const $title = this.$target.querySelector(
-      '.todo-list-contents-header-text'
-    );
-    $title.value = title;
   }
 
   setEvent() {
@@ -61,8 +58,11 @@ export default class NewCard extends Component {
 
     this.addEvent('click', '.btn-normal', ({ target }) => {
       const targetProperty = new PropertyFinder(target);
-      const { isModifying, columnIdx } = targetProperty.getAllProperty();
+      const { isModifying, columnIdx, cardContainer } =
+        targetProperty.getAllProperty();
       if (isModifying) {
+        cardContainer.classList.remove('modifying');
+        this.$props.reRender();
         return;
       }
       this.$props.cancelAddingState(columnIdx);

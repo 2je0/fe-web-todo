@@ -1,8 +1,4 @@
-import {
-  getCardIdxFromCard,
-  getColumnIdxFromCard,
-  modalShow,
-} from '../../util.js';
+import { modalShow } from '../../util.js';
 import Component from '../core/Component.js';
 import NewCard from './NewCard.js';
 
@@ -64,6 +60,7 @@ export default class Card extends Component {
       new NewCard(this.$target, {
         card: cardData,
         modifyCard: this.$props.modifyCard,
+        reRender: this.$props.reRender,
       });
     });
   }

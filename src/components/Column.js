@@ -65,6 +65,7 @@ export default class Column extends Component {
         deleteCard: this.$props.deleteCard,
         addCard: this.$props.addCard,
         modifyCard: this.$props.modifyCard,
+        reRender: this.render.bind(this),
       });
     });
 
