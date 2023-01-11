@@ -238,7 +238,7 @@ menu {
 
 .content-delete {
   background: #ffeeec;
-  border: 1px solid #ff4343;
+  outline: 1px solid #ff4343;
 }
 .content-delete path {
   fill: #ff4343;
@@ -246,13 +246,13 @@ menu {
 
 .content-delete-hover {
   background: #ffeeec;
-  border: 1px solid #ff4343;
+  outline: 1px solid #ff4343;
 }
 .content-delete-hover path {
   fill: #ff4343;
 }
 .content-new {
-  border: 1px solid #0075de;
+  outline: 1px solid #0075de;
 }
 
 .todo-list-contents-container.dragging {
