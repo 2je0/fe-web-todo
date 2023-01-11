@@ -77,7 +77,12 @@ export default class NewCard extends Component {
         node.focus();
       }
       if (key === 'Backspace' && target.value === '') {
-        target.previousSibling.focus();
+        const previousNode = target.previousElementSibling;
+        const isInputNode = previousNode?.classList.contains(
+          'todo-list-contents-detail'
+        );
+        if (!isInputNode) return;
+        previousNode.focus();
         target.remove();
       }
     });
