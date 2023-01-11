@@ -79,6 +79,9 @@ menu {
   line-height: 23px;
   margin: 8px 0;
 }
+.history-content-desc span {
+  font-weight: bold;
+}
 .history-content-time {
   font-weight: 400;
   font-size: 14px;
