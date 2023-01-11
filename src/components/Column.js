@@ -11,9 +11,9 @@ export default class Column extends Component {
     return `
     <div class="todo-list-column-header-container">
     <div class="todo-list-column-left">
-      <input class="todo-list-column-header-text" value=${
+      <input class="todo-list-column-header-text" value="${
         column.title
-      } readonly>
+      }" readonly>
       <div class="todo-list-column-count-container">
         <div class="todo-list-count">${column.cards.length}</div>
       </div>
