@@ -2,11 +2,15 @@ import Component from '../core/Component.js';
 import PropertyFinder from '../util/PropertyFinder.js';
 
 export default class NewCard extends Component {
-  setup() {}
+  setup() {
+    this.$state = this.$props.card || {
+      title: '',
+      details: [],
+      footer: 'author by web',
+    };
+  }
 
   template() {
-    const { details } = this.$props?.card || [];
-
     return `
     <div class="todo-list-contents-container content-new">
     <div class="todo-list-contents-header-container">
@@ -15,10 +19,24 @@ export default class NewCard extends Component {
       placeholder="제목을 입력하세요"
     />
   </div>
-  <input
-    class="todo-list-contents-desc-container"
-    placeholder="내용을 입력하세요"
-  />
+  ${this.$state.details
+    .map(
+      (detail) => `<input
+  class="todo-list-contents-desc-container"
+  placeholder="내용을 입력하세요"
+  value="${detail}"
+/>`
+    )
+    .join('')}
+  ${
+    this.$state.details.length
+      ? ''
+      : `<input
+  class="todo-list-contents-desc-container"
+  placeholder="내용을 입력하세요"
+/>`
+  }
+  
   <div class="todo-list-new-contents-btn-container ">
     <button class="btn btn-normal">취소</button>
     <button class="btn btn-accent" disabled>등록</button>
