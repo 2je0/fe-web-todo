@@ -1,11 +1,6 @@
-import {
-  getCardIdxFromCard,
-  getColumnIdxFromCard,
-  getDeletingCard,
-  modalHide,
-  revertDeletingState,
-} from '../../util.js';
+import { getDeletingCard, modalHide, revertDeletingState } from '../../util.js';
 import Component from '../core/Component.js';
+import PropertyFinder from '../util/PropertyFinder.js';
 
 export default class Modal extends Component {
   setup() {}
@@ -26,8 +21,8 @@ export default class Modal extends Component {
   setEvent() {
     this.addEvent('click', '.btn-accent', () => {
       const deletingCard = getDeletingCard();
-      const columnIdx = getColumnIdxFromCard(deletingCard);
-      const cardIdx = getCardIdxFromCard(deletingCard);
+      const targetProperty = new PropertyFinder(deletingCard);
+      const { columnIdx, cardIdx } = targetProperty.getAllProperty();
       this.$props.deleteCard(columnIdx, cardIdx);
     });
 

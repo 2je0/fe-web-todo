@@ -26,9 +26,7 @@ export const getColumnIdxFromColumn = (columnComponent) => {
 
 export const getCardIdxFromCard = (cardComponent) => {
   const columnComponent = cardComponent.closest('.todo-list-column-container');
-  const cardComponents = columnComponent.querySelectorAll(
-    '.todo-list-contents-container:not(.content-new)'
-  );
+  const cardComponents = columnComponent.querySelectorAll('.card-container');
   return nthChild(cardComponents, cardComponent);
 };
 

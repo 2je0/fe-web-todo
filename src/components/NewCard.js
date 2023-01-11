@@ -1,8 +1,23 @@
-import { getColumnIdxFromColumn, nthChild } from '../../util.js';
 import Component from '../core/Component.js';
+import PropertyFinder from '../util/PropertyFinder.js';
 
 export default class NewCard extends Component {
-  setup() {}
+  setup() {
+    this.$state = this.$props.card || {
+      title: '',
+      details: [],
+      footer: 'author by web',
+    };
+  }
+
+  detailTemplate(datail = '') {
+    return `
+    <input
+    placeholder="내용을 입력하세요"
+    class="todo-list-contents-detail"
+    value="${datail}"
+  />`;
+  }
 
   template() {
     return `
@@ -11,61 +26,71 @@ export default class NewCard extends Component {
     <input
       class="todo-list-contents-header-text"
       placeholder="제목을 입력하세요"
+      value="${this.$state.title}"
     />
   </div>
-  <input
-    class="todo-list-contents-desc-container"
-    placeholder="내용을 입력하세요"
-  />
-  <div class="todo-list-new-contents-btn-container">
+  <ul class="todo-list-contents-desc-container">
+  ${this.$state.details.map((detail) => this.detailTemplate(detail)).join('')}
+  ${this.$state.details.length ? '' : this.detailTemplate()}
+  </ul>
+  <div class="todo-list-new-contents-btn-container ">
     <button class="btn btn-normal">취소</button>
-    <button class="btn btn-accent">등록</button>
+    <button class="btn btn-accent" disabled>등록</button>
   </div>
   </div>
     `;
   }
+  mounted() {
+    const cardData = this.$props.card;
+    const $accentBtn = this.$target.querySelector('.btn-accent');
+    const title = cardData?.title || '';
+    if (title) $accentBtn.disabled = false;
+  }
 
   setEvent() {
-    this.addEvent('click', '.btn-accent', () => {
-      const column = this.$target.parentNode;
-      const columnIdx = getColumnIdxFromColumn(column);
-
-      const title = column.querySelector(
-        '.todo-list-contents-header-text'
-      ).value;
-      const details = column.querySelector(
-        '.todo-list-contents-desc-container'
-      ).value;
-      const newCard = {
-        title,
-        details: [details],
-        footer: 'author by web',
-      };
-      this.$props.addCard(columnIdx, newCard);
+    this.addEvent('click', '.btn-accent', ({ target }) => {
+      const targetProperty = new PropertyFinder(target);
+      const { columnIdx, cardIdx, cardData, isModifying } =
+        targetProperty.getAllProperty();
+      if (isModifying) this.$props.modifyCard(columnIdx, cardIdx, cardData);
+      if (!isModifying) this.$props.addCard(columnIdx, cardData);
     });
 
-    this.addEvent('click', '.btn-normal', () => {
-      const column = this.$target.parentNode;
-      const columnIdx = getColumnIdxFromColumn(column);
+    this.addEvent('click', '.btn-normal', ({ target }) => {
+      const targetProperty = new PropertyFinder(target);
+      const { isModifying, columnIdx, cardContainer } =
+        targetProperty.getAllProperty();
+      if (isModifying) {
+        cardContainer.classList.remove('modifying');
+        this.$props.reRender();
+        return;
+      }
       this.$props.cancelAddingState(columnIdx);
     });
 
-    this.addEvent(
-      'keyup',
-      '.todo-list-contents-desc-container',
-      ({ key, target }) => {
-        if (key === 'Enter') {
-          const node = document.createElement('input');
-          node.classList.add('todo-list-contents-desc-container');
-          node.placeholder = '내용을 입력하세요';
-          target.insertAfter(node);
-          node.focus();
-        }
-        if (key === 'Backspace' && target.value === '') {
-          target.previousSibling.focus();
-          target.remove();
-        }
+    this.addEvent('keyup', '.todo-list-contents-detail', ({ key, target }) => {
+      if (key === 'Enter' && target.value.trim() !== '') {
+        const node = document.createElement('input');
+        node.classList.add('todo-list-contents-detail');
+        node.placeholder = '내용을 입력하세요';
+        target.insertAfter(node);
+        node.focus();
       }
-    );
+      if (key === 'Backspace' && target.value === '') {
+        const previousNode = target.previousElementSibling;
+        const isInputNode = previousNode?.classList.contains(
+          'todo-list-contents-detail'
+        );
+        if (!isInputNode) return;
+        previousNode.focus();
+        target.remove();
+      }
+    });
+
+    this.addEvent('keyup', '.todo-list-contents-header-text', ({ target }) => {
+      const $btn = this.$target.querySelector('.btn-accent');
+      if (target.value.trim() !== '') $btn.disabled = false;
+      else $btn.disabled = true;
+    });
   }
 }

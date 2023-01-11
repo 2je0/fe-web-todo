@@ -52,7 +52,6 @@ export default class App extends Component {
     const $todoListApp = this.$target.querySelector('.todo-list-container');
     const $sidebar = this.$target.querySelector('menu');
     const $modal = this.$target.querySelector('.modal-container');
-
     new Sidebar($sidebar, { history: this.$state.history });
     new TodoListApp($todoListApp, {
       columns: this.$state.columns,
@@ -61,6 +60,7 @@ export default class App extends Component {
       toggleNewCard: this.toggleNewCard.bind(this),
       cancelAddingState: this.cancelAddingState.bind(this),
       modifyColumnTitle: this.modifyColumnTitle.bind(this),
+      modifyCard: this.modifyCard.bind(this),
     });
     new Modal($modal, {
       deleteCard: this.deleteCard.bind(this),
@@ -79,39 +79,44 @@ export default class App extends Component {
   }
 
   toggleNewCard(columnIdx) {
-    const newColumn = [...this.$state.columns];
-    newColumn[columnIdx].addingState = !newColumn[columnIdx].addingState;
-    this.setState({ columns: newColumn });
+    const newColumns = [...this.$state.columns];
+    newColumns[columnIdx].addingState = !newColumns[columnIdx].addingState;
+    this.setState({ columns: newColumns });
   }
 
-  addCard(columnIdx, card) {
-    const newColumn = [...this.$state.columns];
-    newColumn[columnIdx].cards.unshift(card);
-    newColumn[columnIdx].addingState = !newColumn[columnIdx].addingState;
-    this.setState({ columns: newColumn });
+  addCard(columnIdx, card, cardIdx = 0) {
+    const newColumns = [...this.$state.columns];
+    newColumns[columnIdx].cards.splice(cardIdx, 0, card); //unshift(card);
+    newColumns[columnIdx].addingState = !newColumns[columnIdx].addingState;
+    this.setState({ columns: newColumns });
+  }
+  modifyCard(columnIdx, cardIdx, newCardData) {
+    const newColumns = [...this.$state.columns];
+    newColumns[columnIdx].cards.splice(cardIdx, 1, newCardData);
+    this.setState({ columns: newColumns });
   }
 
   deleteColumn(columnIdx) {
-    const newColumn = [...this.$state.columns];
-    newColumn.splice(columnIdx, 1);
-    this.setState({ columns: newColumn });
+    const newColumns = [...this.$state.columns];
+    newColumns.splice(columnIdx, 1);
+    this.setState({ columns: newColumns });
   }
 
   deleteCard(columnIdx, cardIdx) {
-    const newColumn = [...this.$state.columns];
-    newColumn[columnIdx].cards.splice(cardIdx, 1);
-    this.setState({ columns: newColumn });
+    const newColumns = [...this.$state.columns];
+    newColumns[columnIdx].cards.splice(cardIdx, 1);
+    this.setState({ columns: newColumns });
   }
 
   cancelAddingState(columnIdx) {
-    const newColumn = [...this.$state.columns];
-    newColumn[columnIdx].addingState = !newColumn[columnIdx].addingState;
-    this.setState({ columns: newColumn });
+    const newColumns = [...this.$state.columns];
+    newColumns[columnIdx].addingState = !newColumns[columnIdx].addingState;
+    this.setState({ columns: newColumns });
   }
 
   modifyColumnTitle(columnIdx, newTitle) {
-    const newColumn = [...this.$state.columns];
-    newColumn[columnIdx].title = newTitle;
-    this.setState({ columns: newColumn });
+    const newColumns = [...this.$state.columns];
+    newColumns[columnIdx].title = newTitle;
+    this.setState({ columns: newColumns });
   }
 }

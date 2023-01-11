@@ -1,9 +1,6 @@
-import {
-  getCardIdxFromCard,
-  getColumnIdxFromColumn,
-  modalShow,
-} from '../../util.js';
+import { modalShow } from '../../util.js';
 import Component from '../core/Component.js';
+import NewCard from './NewCard.js';
 
 export default class Card extends Component {
   setup() {}
@@ -11,6 +8,7 @@ export default class Card extends Component {
   template() {
     const card = this.$props.card;
     return `
+    <div class="todo-list-contents-container" draggable="true">
     <div class="todo-list-contents-header-container">
                 <div class="todo-list-contents-header-text">
                   ${card.title}
@@ -34,24 +32,36 @@ export default class Card extends Component {
               ${card.details.map((ele) => `<li>${ele}</li>`).join('')}
               </ul>
               <div class="todo-list-contents-footer">${card.footer}</div>
+              </div>
     `;
   }
 
   setEvent() {
     this.addEvent('click', '.btn-card-x', (e) => {
-      const card = this.$target;
+      const card = this.$target.querySelector('.todo-list-contents-container');
       card.classList.add('content-delete');
       modalShow();
     });
 
     this.addEvent('mouseover', '.btn-card-x', () => {
-      const card = this.$target;
+      const card = this.$target.querySelector('.todo-list-contents-container');
       card.classList.add('content-delete-hover');
     });
 
     this.addEvent('mouseout', '.btn-card-x', () => {
-      const card = this.$target;
+      const card = this.$target.querySelector('.todo-list-contents-container');
       card.classList.remove('content-delete-hover');
+    });
+    this.addEvent('dblclick', '.card-container', ({ target }) => {
+      const $card = target.closest('.card-container');
+      $card.classList.add('modifying');
+
+      const cardData = this.$props.card;
+      new NewCard(this.$target, {
+        card: cardData,
+        modifyCard: this.$props.modifyCard,
+        reRender: this.$props.reRender,
+      });
     });
   }
 }
