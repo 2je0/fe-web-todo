@@ -3,38 +3,10 @@ import TodoListApp from './components/TodoListApp.js';
 import Sidebar from './components/Sidebar.js';
 import Modal from './components/Modal.js';
 
-const dummyCard = {
-  title: 'gitHub 공부하기',
-  details: ['gitbub 공부내용', 'gitbub 공부내용'],
-  footer: 'author by web',
-};
-
-const dummyColumn = {
-  title: '해야할 일',
-  cards: [dummyCard, dummyCard],
-  addingState: false,
-};
-
-const dummyState = {
-  columns: [dummyColumn],
-  history: [],
-};
-
 export default class App extends Component {
   setup() {
     this.$state = {
-      columns: [
-        {
-          title: '제목 없음',
-          cards: [dummyCard, dummyCard],
-          addingState: false,
-        },
-        {
-          title: '제목 없음',
-          cards: [],
-          addingState: false,
-        },
-      ],
+      columns: [],
       history: [],
     };
   }
