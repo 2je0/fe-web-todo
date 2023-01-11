@@ -49,9 +49,9 @@ export default class PropertyFinder {
   }
   getDetails() {
     const ret = [];
-    const $details = this.#cardContainer.querySelectorAll(
-      '.todo-list-contents-desc-container'
-    );
+    const $details = this.#cardContainer
+      .querySelector('.todo-list-contents-desc-container')
+      .querySelectorAll('input');
     $details.forEach((ele) => {
       if (ele.value) ret.push(ele.value);
     });

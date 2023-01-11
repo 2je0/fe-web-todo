@@ -10,6 +10,15 @@ export default class NewCard extends Component {
     };
   }
 
+  detailTemplate(datail = '') {
+    return `
+    <input
+    placeholder="내용을 입력하세요"
+    class="todo-list-contents-detail"
+    value="${datail}"
+  />`;
+  }
+
   template() {
     return `
     <div class="todo-list-contents-container content-new">
@@ -19,24 +28,10 @@ export default class NewCard extends Component {
       placeholder="제목을 입력하세요"
     />
   </div>
-  ${this.$state.details
-    .map(
-      (detail) => `<input
-  class="todo-list-contents-desc-container"
-  placeholder="내용을 입력하세요"
-  value="${detail}"
-/>`
-    )
-    .join('')}
-  ${
-    this.$state.details.length
-      ? ''
-      : `<input
-  class="todo-list-contents-desc-container"
-  placeholder="내용을 입력하세요"
-/>`
-  }
-  
+  <ul class="todo-list-contents-desc-container">
+  ${this.$state.details.map((detail) => this.detailTemplate(detail)).join('')}
+  ${this.$state.details.length ? '' : this.detailTemplate()}
+  </ul>
   <div class="todo-list-new-contents-btn-container ">
     <button class="btn btn-normal">취소</button>
     <button class="btn btn-accent" disabled>등록</button>
@@ -73,23 +68,19 @@ export default class NewCard extends Component {
       this.$props.cancelAddingState(columnIdx);
     });
 
-    this.addEvent(
-      'keyup',
-      '.todo-list-contents-desc-container',
-      ({ key, target }) => {
-        if (key === 'Enter' && target.value.trim() !== '') {
-          const node = document.createElement('input');
-          node.classList.add('todo-list-contents-desc-container');
-          node.placeholder = '내용을 입력하세요';
-          target.insertAfter(node);
-          node.focus();
-        }
-        if (key === 'Backspace' && target.value === '') {
-          target.previousSibling.focus();
-          target.remove();
-        }
+    this.addEvent('keyup', '.todo-list-contents-detail', ({ key, target }) => {
+      if (key === 'Enter' && target.value.trim() !== '') {
+        const node = document.createElement('input');
+        node.classList.add('todo-list-contents-detail');
+        node.placeholder = '내용을 입력하세요';
+        target.insertAfter(node);
+        node.focus();
       }
-    );
+      if (key === 'Backspace' && target.value === '') {
+        target.previousSibling.focus();
+        target.remove();
+      }
+    });
 
     this.addEvent('keyup', '.todo-list-contents-header-text', ({ target }) => {
       const $btn = this.$target.querySelector('.btn-accent');
