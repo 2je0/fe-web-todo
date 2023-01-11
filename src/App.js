@@ -7,7 +7,26 @@ export default class App extends Component {
   setup() {
     this.$state = {
       columns: [],
-      history: [],
+      historys: [
+        // {
+        //   imgUrl: './asset/user-img.svg',
+        //   userId: 'sam',
+        //   createdAt: '2022-1-11',
+        //   initialState: '해야할 일',
+        //   finalState: '하고 있는 일',
+        //   actionType: '이동',
+        //   task: 'HTML/CSS공부하기',
+        // },
+        // {
+        //   imgUrl: './asset/user-img.svg',
+        //   userId: 'sam',
+        //   createdAt: '2022-1-11',
+        //   initialState: '해야할 일',
+        //   finalState: '하고 있는 일',
+        //   actionType: '이동',
+        //   task: 'HTML/CSS공부하기',
+        // },
+      ],
     };
   }
 
@@ -24,7 +43,7 @@ export default class App extends Component {
     const $todoListApp = this.$target.querySelector('.todo-list-container');
     const $sidebar = this.$target.querySelector('menu');
     const $modal = this.$target.querySelector('.modal-container');
-    new Sidebar($sidebar, { history: this.$state.history });
+    new Sidebar($sidebar, { historys: this.$state.historys });
     new TodoListApp($todoListApp, {
       columns: this.$state.columns,
       addCard: this.addCard.bind(this),
@@ -57,15 +76,37 @@ export default class App extends Component {
   }
 
   addCard(columnIdx, card, cardIdx = 0) {
+    const newHistorys = [...this.$state.historys];
+    const newHistory = {
+      imgUrl: './asset/user-img.svg',
+      userId: 'sam',
+      createdAt: new Date(),
+      finalState: this.$state.columns[columnIdx].title,
+      actionType: '등록',
+      task: card.title,
+    };
+    newHistorys.unshift(newHistory);
+
     const newColumns = [...this.$state.columns];
     newColumns[columnIdx].cards.splice(cardIdx, 0, card); //unshift(card);
     newColumns[columnIdx].addingState = !newColumns[columnIdx].addingState;
-    this.setState({ columns: newColumns });
+    this.setState({ columns: newColumns, historys: newHistorys });
   }
   modifyCard(columnIdx, cardIdx, newCardData) {
+    const newHistorys = [...this.$state.historys];
+    const newHistory = {
+      imgUrl: './asset/user-img.svg',
+      userId: 'sam',
+      createdAt: new Date(),
+      initialState: newCardData.title,
+      finalState: this.$state.columns[columnIdx].cards[cardIdx].title,
+      actionType: '변경',
+    };
+    newHistorys.unshift(newHistory);
+
     const newColumns = [...this.$state.columns];
     newColumns[columnIdx].cards.splice(cardIdx, 1, newCardData);
-    this.setState({ columns: newColumns });
+    this.setState({ columns: newColumns, historys: newHistorys });
   }
 
   deleteColumn(columnIdx) {
@@ -75,9 +116,20 @@ export default class App extends Component {
   }
 
   deleteCard(columnIdx, cardIdx) {
+    const newHistorys = [...this.$state.historys];
+    const newHistory = {
+      imgUrl: './asset/user-img.svg',
+      userId: 'sam',
+      createdAt: new Date(),
+      finalState: this.$state.columns[columnIdx].title,
+      task: this.$state.columns[columnIdx].cards[cardIdx].title,
+      actionType: '삭제',
+    };
+    newHistorys.unshift(newHistory);
+
     const newColumns = [...this.$state.columns];
     newColumns[columnIdx].cards.splice(cardIdx, 1);
-    this.setState({ columns: newColumns });
+    this.setState({ columns: newColumns, historys: newHistorys });
   }
 
   cancelAddingState(columnIdx) {
