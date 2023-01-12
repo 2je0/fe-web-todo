@@ -52,7 +52,7 @@ export default class Column extends Component {
   <div class="new-card-container"></div>
   
   ${column.cards
-    .map(() => `<div class="card-container" draggable="true"></div>`)
+    .map(() => `<div class="card-container droppable"></div>`)
     .join('')}
   `;
   }
@@ -66,6 +66,7 @@ export default class Column extends Component {
         addCard: this.$props.addCard,
         modifyCard: this.$props.modifyCard,
         reRender: this.render.bind(this),
+        transferCard: this.$props.transferCard,
       });
     });
 
@@ -83,18 +84,15 @@ export default class Column extends Component {
       const columnIdx = targetProperty.getColumnIdx();
       this.$props.toggleNewCard(columnIdx);
     });
-
     this.addEvent('click', '.column-btn-x', ({ target }) => {
       const targetProperty = new PropertyFinder(target);
       const columnIdx = targetProperty.getColumnIdx();
       this.$props.deleteColumn(columnIdx);
     });
-
     this.addEvent('dblclick', '.todo-list-column-header-text', ({ target }) => {
       target.readOnly = false;
       target.classList.add('outline');
     });
-
     this.addEvent(
       'keyup',
       '.todo-list-column-header-text',
@@ -103,7 +101,6 @@ export default class Column extends Component {
         this.exitModifyColumnTitle(target);
       }
     );
-
     this.addEvent('focusout', '.todo-list-column-header-text', ({ target }) => {
       this.exitModifyColumnTitle(target);
     });
