@@ -1,4 +1,5 @@
 import Component from '../core/Component.js';
+import PropertyFinder from '../util/PropertyFinder.js';
 import Column from './Column.js';
 import Header from './Header.js';
 export default class TodoListApp extends Component {

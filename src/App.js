@@ -2,31 +2,43 @@ import Component from './core/Component.js';
 import TodoListApp from './components/TodoListApp.js';
 import Sidebar from './components/Sidebar.js';
 import Modal from './components/Modal.js';
+const dummyCard = {
+  title: 'gitHub 공부하기',
+  details: ['gitbub 공부내용', 'gitbub 공부내용'],
+  footer: 'author by web',
+};
+const dummyCard2 = {
+  title: 'asdasd',
+  details: ['asdasd', 'asdasd'],
+  footer: 'author by web',
+};
+const dummyCard3 = {
+  title: 'kasdjflkasdjfla',
+  details: ['kasdjflkasdjfla', 'kasdjflkasdjfla'],
+  footer: 'author by web',
+};
 
+const dummyColumn = {
+  title: '해야할 일',
+  cards: [
+    dummyCard,
+    dummyCard2,
+    { ...dummyCard },
+    dummyCard3,
+    { ...dummyCard },
+  ],
+  addingState: false,
+};
+
+const dummyState = {
+  columns: [dummyColumn],
+  history: [],
+};
 export default class App extends Component {
   setup() {
     this.$state = {
-      columns: [],
-      historys: [
-        // {
-        //   imgUrl: './asset/user-img.svg',
-        //   userId: 'sam',
-        //   createdAt: '2022-1-11',
-        //   initialState: '해야할 일',
-        //   finalState: '하고 있는 일',
-        //   actionType: '이동',
-        //   task: 'HTML/CSS공부하기',
-        // },
-        // {
-        //   imgUrl: './asset/user-img.svg',
-        //   userId: 'sam',
-        //   createdAt: '2022-1-11',
-        //   initialState: '해야할 일',
-        //   finalState: '하고 있는 일',
-        //   actionType: '이동',
-        //   task: 'HTML/CSS공부하기',
-        // },
-      ],
+      columns: [dummyColumn],
+      historys: [],
     };
   }
 
