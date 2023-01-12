@@ -30,6 +30,7 @@ export default class TodoListApp extends Component {
         cancelAddingState: this.$props.cancelAddingState,
         modifyColumnTitle: this.$props.modifyColumnTitle,
         modifyCard: this.$props.modifyCard,
+        transferCard: this.$props.transferCard,
       });
     });
   }

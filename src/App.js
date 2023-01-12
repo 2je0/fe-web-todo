@@ -7,26 +7,7 @@ export default class App extends Component {
   setup() {
     this.$state = {
       columns: [],
-      historys: [
-        // {
-        //   imgUrl: './asset/user-img.svg',
-        //   userId: 'sam',
-        //   createdAt: '2022-1-11',
-        //   initialState: '해야할 일',
-        //   finalState: '하고 있는 일',
-        //   actionType: '이동',
-        //   task: 'HTML/CSS공부하기',
-        // },
-        // {
-        //   imgUrl: './asset/user-img.svg',
-        //   userId: 'sam',
-        //   createdAt: '2022-1-11',
-        //   initialState: '해야할 일',
-        //   finalState: '하고 있는 일',
-        //   actionType: '이동',
-        //   task: 'HTML/CSS공부하기',
-        // },
-      ],
+      historys: [],
     };
   }
 
@@ -52,6 +33,7 @@ export default class App extends Component {
       cancelAddingState: this.cancelAddingState.bind(this),
       modifyColumnTitle: this.modifyColumnTitle.bind(this),
       modifyCard: this.modifyCard.bind(this),
+      transferCard: this.transferCard.bind(this),
     });
     new Modal($modal, {
       deleteCard: this.deleteCard.bind(this),
@@ -132,6 +114,14 @@ export default class App extends Component {
     this.setState({ columns: newColumns, historys: newHistorys });
   }
 
+  transferCard(oldColumnIdx, oldCardIdx, newColumnIdx, newCardIdx) {
+    const newColumns = [...this.$state.columns];
+    const oldCardData = this.getCardData(oldColumnIdx, oldCardIdx);
+    this.deleteCardData(newColumns, oldColumnIdx, oldCardIdx);
+    this.insertCardData(newColumns, newColumnIdx, newCardIdx, oldCardData);
+    this.setState({ columns: newColumns });
+  }
+
   cancelAddingState(columnIdx) {
     const newColumns = [...this.$state.columns];
     newColumns[columnIdx].addingState = !newColumns[columnIdx].addingState;
@@ -142,5 +132,18 @@ export default class App extends Component {
     const newColumns = [...this.$state.columns];
     newColumns[columnIdx].title = newTitle;
     this.setState({ columns: newColumns });
+  }
+
+  getCardData(columnIdx, cardIdx) {
+    return { ...this.$state.columns[columnIdx].cards[cardIdx] };
+  }
+  deleteCardData(columns, columnIdx, cardIdx) {
+    columns[columnIdx].cards.splice(cardIdx, 1);
+  }
+  exchangeCardData(columns, columnIdx, cardIdx, cardData) {
+    columns[columnIdx].cards.splice(cardIdx, 1, cardData);
+  }
+  insertCardData(columns, columnIdx, cardIdx, cardData) {
+    columns[columnIdx].cards.splice(cardIdx, 0, cardData);
   }
 }
