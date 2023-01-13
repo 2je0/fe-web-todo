@@ -1,6 +1,6 @@
 import { modalShow } from '../../util.js';
 import Component from '../core/Component.js';
-import PropertyFinder from '../util/PropertyFinder.js';
+import DragEvent from '../event/DragEvent.js';
 import NewCard from './NewCard.js';
 
 export default class Card extends Component {
@@ -64,99 +64,15 @@ export default class Card extends Component {
         reRender: this.$props.reRender,
       });
     });
-    /* drag n drop
-     * 리팩토링 해야될 코드
-     *
-     *
-     */
-    //TODO:
-    const DELAY = 400;
-    let timer = null;
-    let isPress = false;
 
-    function mouseDown(e, transferCardFn) {
-      isPress = true;
-      timer = setTimeout(() => {
-        hold(e, transferCardFn);
-      }, DELAY);
-    }
-
-    function hold(e, transferCardFn) {
-      if (timer) clearTimeout(timer);
-      if (isPress) drag(e, transferCardFn);
-    }
-
-    function mouseUp() {
-      isPress = false;
-    }
+    const dragEvent = new DragEvent(this.$props.transferCard);
 
     this.addEvent('mousedown', '.card-container:not(.modifying)', (e) => {
-      mouseDown(e, this.$props.transferCard);
+      dragEvent.mouseDown(e);
     });
-    this.addEvent('mouseup', '.card-container', mouseUp);
 
-    function drag(e, transferCardFn) {
-      const targetProperty = new PropertyFinder(e.target);
-      const {
-        cardContainer,
-        columnIdx: oldcolumnIdx,
-        cardIdx: oldcardIdx,
-      } = targetProperty.getAllProperty();
-      const node = cardContainer.cloneNode(true);
-      node.classList.add('dragging-move');
-      cardContainer.classList.remove('droppable');
-      cardContainer.classList.add('dragging-fix');
-
-      node.style.position = 'absolute';
-      node.style.zIndex = 1000;
-      document.body.append(node);
-      function moveAt(pageX, pageY) {
-        node.style.left = pageX - node.offsetWidth / 2 + 'px';
-        node.style.top = pageY - node.offsetHeight / 2 + 'px';
-      }
-
-      moveAt(e.pageX, e.pageY);
-      let currentDroppable = cardContainer;
-      let isCurrentSideUpper = true;
-
-      function onMouseMove(event) {
-        moveAt(event.pageX, event.pageY);
-        node.hidden = true;
-        const elemBelow = document.elementFromPoint(
-          event.clientX,
-          event.clientY
-        );
-        node.hidden = false;
-        if (!elemBelow) return;
-        const droppableBelow = elemBelow.closest('.droppable');
-        const rect = droppableBelow && droppableBelow.getBoundingClientRect();
-        const isUpperSide = rect && event.clientY < rect.top + rect.height / 2;
-
-        if (!droppableBelow) return;
-        if (currentDroppable !== droppableBelow) {
-          currentDroppable = droppableBelow;
-        }
-        if (currentDroppable === droppableBelow) {
-          if (isCurrentSideUpper === isUpperSide) return;
-          isCurrentSideUpper = isUpperSide;
-          if (isUpperSide)
-            droppableBelow.previousElementSibling.insertAfter(cardContainer);
-          else droppableBelow.insertAfter(cardContainer);
-        }
-      }
-
-      document.addEventListener('mousemove', onMouseMove);
-      node.addEventListener('mouseup', () => {
-        const pointTobeDropped = document.querySelector('.dragging-fix');
-        const currentDroppableProperty = new PropertyFinder(pointTobeDropped);
-        const { columnIdx: newColumnIdx, cardIdx: newCardIdx } =
-          currentDroppableProperty.getAllProperty();
-        document.removeEventListener('mousemove', onMouseMove);
-        node.onmouseup = null;
-        cardContainer.remove();
-        node.remove();
-        transferCardFn(oldcolumnIdx, oldcardIdx, newColumnIdx, newCardIdx);
-      });
-    }
+    this.addEvent('mouseup', '.card-container', () => {
+      dragEvent.mouseUp();
+    });
   }
 }
