@@ -291,10 +291,10 @@ menu {
   position: absolute;
   width: 100vw;
   height: 100vh;
-  background-color: black;
-  opacity: 50%;
+  background: rgba(0, 0, 0, 0.5);
   transition: all 0.5s ease-in-out;
   z-index: 2;
+  backdrop-filter: blur(8px);
 }
 .modal-container {
   position: absolute;
@@ -399,11 +399,16 @@ menu {
 }
 
 .dragging-move {
-  outline: 2px solid blueviolet;
+  background: rgba(255, 255, 255, 0.8);
+
+  box-shadow: 0px 0px 4px rgba(204, 204, 204, 0.5),
+    0px 2px 4px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(2px);
 }
 
 .dragging-fix {
-  outline: 2px solid red;
+  outline: 3px red dashed;
+  opacity: 50%;
 }
 .card-container {
   margin: 16px 0;

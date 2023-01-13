@@ -69,6 +69,7 @@ export default class Card extends Component {
      *
      *
      */
+    //TODO:
     const DELAY = 400;
     let timer = null;
     let isPress = false;
@@ -89,15 +90,10 @@ export default class Card extends Component {
       isPress = false;
     }
 
-    function dblClick() {
-      console.log('dblClick');
-    }
-
     this.addEvent('mousedown', '.card-container:not(.modifying)', (e) => {
       mouseDown(e, this.$props.transferCard);
     });
     this.addEvent('mouseup', '.card-container', mouseUp);
-    this.addEvent('dblclick', '.card-container', dblClick);
 
     function drag(e, transferCardFn) {
       const targetProperty = new PropertyFinder(e.target);
@@ -110,7 +106,7 @@ export default class Card extends Component {
       node.classList.add('dragging-move');
       cardContainer.classList.remove('droppable');
       cardContainer.classList.add('dragging-fix');
-      // node.classList.remove('droppable');
+
       node.style.position = 'absolute';
       node.style.zIndex = 1000;
       document.body.append(node);
@@ -118,7 +114,7 @@ export default class Card extends Component {
         node.style.left = pageX - node.offsetWidth / 2 + 'px';
         node.style.top = pageY - node.offsetHeight / 2 + 'px';
       }
-      // 포인터 아래로 공을 이동시킵니다.
+
       moveAt(e.pageX, e.pageY);
       let currentDroppable = cardContainer;
       let isCurrentSideUpper = true;
@@ -149,25 +145,16 @@ export default class Card extends Component {
         }
       }
 
-      // (2) mousemove로 공을 움직입니다.
       document.addEventListener('mousemove', onMouseMove);
-      // (3) 공을 드롭하고, 불필요한 핸들러를 제거합니다.
       node.addEventListener('mouseup', () => {
-        // if (currentDroppable) {
-        // debugger;
         const pointTobeDropped = document.querySelector('.dragging-fix');
         const currentDroppableProperty = new PropertyFinder(pointTobeDropped);
         const { columnIdx: newColumnIdx, cardIdx: newCardIdx } =
           currentDroppableProperty.getAllProperty();
-        // const newCardIdx = cardIdx + (isCurrentSideUpper ? 0 : 1);
-        // console.log(
-        //   `card: ${newCardIdx}, side: ${isCurrentSideUpper ? 'up' : 'down'}`
-        // );
         document.removeEventListener('mousemove', onMouseMove);
         node.onmouseup = null;
         cardContainer.remove();
         node.remove();
-        console.log(oldcardIdx, newCardIdx);
         transferCardFn(oldcolumnIdx, oldcardIdx, newColumnIdx, newCardIdx);
       });
     }
