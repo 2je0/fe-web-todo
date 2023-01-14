@@ -13,35 +13,39 @@ export default class NewCard extends Component {
   detailTemplate(datail = '') {
     return `
     <input
-    placeholder="내용을 입력하세요"
-    class="todo-list-contents-detail"
-    value="${datail}"
-  />`;
+      placeholder="내용을 입력하세요"
+      class="todo-list-contents-detail"
+      value="${datail}"
+    />
+  `;
   }
 
   template() {
+    const { title, details } = this.$state;
     return `
     <div class="todo-list-contents-container content-new">
-    <div class="todo-list-contents-header-container">
-    <input
-      class="todo-list-contents-header-text"
-      placeholder="제목을 입력하세요"
-      value="${this.$state.title}"
-    />
-  </div>
-  <ul class="todo-list-contents-desc-container">
-  ${this.$state.details.map((detail) => this.detailTemplate(detail)).join('')}
-  ${this.$state.details.length ? '' : this.detailTemplate()}
-  </ul>
-  <div class="todo-list-new-contents-btn-container ">
-    <button class="btn btn-normal">취소</button>
-    <button class="btn btn-accent" disabled>등록</button>
-  </div>
-  </div>
+      <div class="todo-list-contents-header-container">
+        <input
+          class="todo-list-contents-header-text"
+          placeholder="제목을 입력하세요"
+          value="${title}"
+        />
+      </div>
+      <ul class="todo-list-contents-desc-container">
+        ${
+          details.map((detail) => this.detailTemplate(detail)).join('') ||
+          this.detailTemplate()
+        } 
+      </ul>
+      <div class="todo-list-new-contents-btn-container">
+        <button class="btn btn-normal">취소</button>
+        <button class="btn btn-accent" disabled>등록</button>
+      </div>
+    </div>
     `;
   }
   mounted() {
-    const cardData = this.$props.card;
+    const { card: cardData } = this.$props;
     const $accentBtn = this.$target.querySelector('.btn-accent');
     const title = cardData?.title || '';
     if (title) $accentBtn.disabled = false;
