@@ -23,7 +23,10 @@ export default class Modal extends Component {
       const deletingCard = getDeletingCard();
       const targetProperty = new PropertyFinder(deletingCard);
       const { columnIdx, cardIdx } = targetProperty.getAllProperty();
-      this.$props.deleteCard(columnIdx, cardIdx);
+      modalHide();
+      setTimeout(() => {
+        this.$props.deleteCard(columnIdx, cardIdx);
+      }, 300);
     });
 
     this.addEvent('click', '.overlay', () => {
