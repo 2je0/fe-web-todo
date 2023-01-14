@@ -8,12 +8,8 @@ export default class PropertyFinder {
     this.#target = target;
     this.#cardContainer =
       target.closest('.new-card-container') ||
-      target.closest('.card-container') ||
-      (target.classList.contains('card-container') && target) ||
-      (target.classList.contains('new-card-container') && target);
-    this.#columnContainer =
-      target.closest('.todo-list-column-container') ||
-      (target.classList.contains('todo-list-column-container') && target);
+      target.closest('.card-container');
+    this.#columnContainer = target.closest('.todo-list-column-container');
     this.#cardContainers =
       this.#columnContainer.querySelectorAll('.card-container');
     this.#columnContainers = document.querySelectorAll(
