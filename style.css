@@ -147,6 +147,8 @@ menu {
 .todo-list-column-container {
   width: 308px;
   margin-right: 20px;
+  display: flex;
+  flex-direction: column;
 }
 .todo-list-column-header-container {
   display: flex;
@@ -412,5 +414,9 @@ menu {
   opacity: 50%;
 }
 .card-container {
-  margin: 16px 0;
+  margin: 8px 0;
+}
+.dummy-droppable {
+  flex-grow: 1;
+  min-height: 80px;
 }

@@ -6,7 +6,7 @@ class DragEvent {
   isPress = false;
   transferCardFn;
   $currentDroppable = null;
-  isCurrentSideUpper = true;
+  isCurrentSideUpper = null;
   $draggingNode;
   $fixedDragNode;
 
@@ -55,11 +55,11 @@ class DragEvent {
       const diffYPosition =
         fixedDragNodePosition.top - draggingNodePosition.top;
       this.$draggingNode.style.transform = `translate(${diffXPosition}px,${diffYPosition}px)`;
-      this.$draggingNode.style.transitionDuration = '1s';
+      this.$draggingNode.style.transitionDuration = '0.5s';
       setTimeout(() => {
         this.removeBothDragNode();
         this.transferCardFn(oldcolumnIdx, oldcardIdx, newColumnIdx, newCardIdx);
-      }, 1000);
+      }, 500);
     });
   }
 
@@ -93,10 +93,21 @@ class DragEvent {
     if (!$droppableBelow) return;
     if (this.$currentDroppable !== $droppableBelow) {
       this.$currentDroppable = $droppableBelow;
+      if ($droppableBelow.classList.contains('dummy-droppable')) {
+        $droppableBelow.previousElementSibling.insertAfter(this.$fixedDragNode);
+        return;
+      }
+      if (isUpperSide)
+        $droppableBelow.previousElementSibling.insertAfter(this.$fixedDragNode);
+      else $droppableBelow.insertAfter(this.$fixedDragNode);
     }
     if (this.$currentDroppable === $droppableBelow) {
       if (this.isCurrentSideUpper === isUpperSide) return;
       this.isCurrentSideUpper = isUpperSide;
+      if ($droppableBelow.classList.contains('dummy-droppable')) {
+        $droppableBelow.previousElementSibling.insertAfter(this.$fixedDragNode);
+        return;
+      }
       if (isUpperSide)
         $droppableBelow.previousElementSibling.insertAfter(this.$fixedDragNode);
       else $droppableBelow.insertAfter(this.$fixedDragNode);
