@@ -28,9 +28,11 @@ export default class Column extends Component {
     </div>
     <div class="new-card-container"></div>
 
-  ${column.cards
-    .map(() => `<div class="card-container droppable"></div>`)
-    .join('')}
+    ${column.cards
+      .map(() => `<div class="card-container droppable"></div>`)
+      .join('')}
+    <div class="droppable dummy-droppable"></div>
+      
   `;
   }
 
