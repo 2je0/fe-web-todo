@@ -3,13 +3,13 @@ import { ACTION } from '../constants.js';
 import { DataHandler } from './DataHandler.js';
 const initState = { columns: [], historys: [] };
 
-const reducer = (state, actionKey, payload) => {
+const reducer = (state, actionKey, payload = {}) => {
   const { cardIdx, columnIdx, cardData, value } = payload;
   const { oldColumnIdx, oldCardIdx, newColumnIdx, newCardIdx } = payload;
   const newState = { ...state };
   switch (actionKey) {
     case ACTION.ADD_COLUMN:
-      return;
+      return DataHandler.addColumn(newState);
     case ACTION.INIT_DATA:
       return payload;
     case ACTION.TOGGLE_NEW_CARD:

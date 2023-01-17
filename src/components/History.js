@@ -12,17 +12,12 @@ export default class History extends Component {
         <div class="history-content-id">@${userId}</div>
         <div class="history-content-desc">
           ${this.getDescription()}
-
         </div>
         <div class="history-content-time">${this.timeForToday(createdAt)}</div>
       </div>
     </li>
     `;
   }
-
-  mounted() {}
-
-  setEvent() {}
 
   getDescription() {
     const { actionType, finalState, task, initialState } = this.$props.history;

@@ -1,14 +1,19 @@
 import { modalShow } from '../../util.js';
 import Component from '../core/Component.js';
 import DragEvent from '../event/DragEvent.js';
+import { TodoListStore } from '../store/TodoListStore.js';
 import BUTTON from './Button.js';
 import NewCard from './NewCard.js';
 
 export default class Card extends Component {
-  setup() {}
+  setup() {
+    const { columns } = TodoListStore.getState();
+    this.$state = columns[this.$props.columnIdx].cards[this.$props.cardIdx];
+  }
 
   template() {
-    const card = this.$props.card;
+    const card = this.$state;
+    if (!card) return '';
     return `
     <div class="todo-list-contents-container">
       <div class="todo-list-contents-header-container">
@@ -42,10 +47,8 @@ export default class Card extends Component {
     this.addEvent('dblclick', '.card-container', ({ target }) => {
       const $card = target.closest('.card-container');
       $card.classList.add('modifying');
-
-      const cardData = this.$props.card;
       new NewCard(this.$target, {
-        card: cardData,
+        card: this.$state,
         reRender: this.$props.reRender,
       });
     });

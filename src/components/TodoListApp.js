@@ -1,13 +1,13 @@
 import Component from '../core/Component.js';
+import { TodoListStore } from '../store/TodoListStore.js';
 import Column from './Column.js';
 import Header from './Header.js';
 export default class TodoListApp extends Component {
-  setup() {}
-
   template() {
+    const { columns } = TodoListStore.getState();
     return `
     <nav class="todo-list-header-container"></nav>
-    <main class="todo-list-body-container">${this.$props.columns
+    <main class="todo-list-body-container">${columns
       .map(() => `<div class="todo-list-column-container"></div>`)
       .join('')}
     </main>
@@ -22,11 +22,7 @@ export default class TodoListApp extends Component {
       '.todo-list-column-container'
     );
     $columns.forEach(($column, idx) => {
-      new Column($column, {
-        columnIdx: idx,
-        column: this.$props.columns[idx],
-        transferCard: this.$props.transferCard,
-      });
+      new Column($column, { columnIdx: idx });
     });
   }
 }

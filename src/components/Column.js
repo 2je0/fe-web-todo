@@ -5,10 +5,14 @@ import BUTTON from './Button.js';
 import { TodoListStore } from '../store/TodoListStore.js';
 import { ACTION } from '../constants.js';
 export default class Column extends Component {
-  setup() {}
+  setup() {
+    const { columns } = TodoListStore.getState();
+    this.$state = columns[this.$props.columnIdx];
+  }
 
   template() {
-    const { column } = this.$props;
+    const column = this.$state;
+    if (!column) return '<div>로딩중...</div>';
     const { title, cards } = column;
     return `
     <div class="todo-list-column-header-container">
@@ -43,15 +47,12 @@ export default class Column extends Component {
       new Card($card, {
         columnIdx: this.$props.columnIdx,
         cardIdx: idx,
-        card: this.$props.column.cards[idx],
-        deleteCard: this.$props.deleteCard,
         reRender: this.render.bind(this),
-        transferCard: this.$props.transferCard,
       });
     });
 
     const $newCard = this.$target.querySelector('.new-card-container');
-    if (this.$props.column.addingState) new NewCard($newCard, {});
+    if (this.$state.addingState) new NewCard($newCard, {});
   }
 
   setEvent() {

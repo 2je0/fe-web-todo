@@ -1,5 +1,7 @@
+const BASE_URL = 'http://localhost:3001';
+
 export async function addNewColumnToServer() {
-  const url = 'http://localhost:3001/columns';
+  const url = `${BASE_URL}/columns`;
   const newColumnData = {
     title: '제목 없음',
     cards: [],
@@ -12,10 +14,12 @@ export async function addNewColumnToServer() {
     },
     body: JSON.stringify(newColumnData),
   });
+  const data = await response.json();
+  return data.id;
 }
 
 export async function addHistoryToServer(newHistory) {
-  const url = 'http://localhost:3001/historys';
+  const url = `${BASE_URL}/historys`;
   const response = await fetch(url, {
     method: 'post',
     headers: {
@@ -26,8 +30,8 @@ export async function addHistoryToServer(newHistory) {
 }
 
 export async function getServerData(setState) {
-  const columnUrl = 'http://localhost:3001/columns';
-  const historyUrl = 'http://localhost:3001/historys';
+  const columnUrl = `${BASE_URL}/columns`;
+  const historyUrl = `${BASE_URL}/historys`;
   const columnResponse = await fetch(columnUrl, {
     method: 'get',
     headers: {
@@ -47,7 +51,7 @@ export async function getServerData(setState) {
 }
 
 export async function putServerColumn(columnId, columnData) {
-  const url = `http://localhost:3001/columns/${columnId}`;
+  const url = `${BASE_URL}/columns/${columnId}`;
   const response = await fetch(url, {
     method: 'put',
     headers: {
@@ -60,7 +64,7 @@ export async function putServerColumn(columnId, columnData) {
 }
 
 export async function deleteServerColumn(columnId) {
-  const url = `http://localhost:3001/columns/${columnId}`;
+  const url = `${BASE_URL}/columns/${columnId}`;
   const response = await fetch(url, {
     method: 'delete',
     headers: {

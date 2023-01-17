@@ -1,10 +1,23 @@
 import {
   addHistoryToServer,
+  addNewColumnToServer,
   deleteServerColumn,
   putServerColumn,
 } from '../util/fetchUtil.js';
 
 export const DataHandler = {
+  async addColumn(newState) {
+    const id = await addNewColumnToServer();
+    const newColumnData = {
+      title: '제목 없음',
+      cards: [],
+      addingState: false,
+      id,
+    };
+    newState.columns.push(newColumnData);
+    return newState;
+  },
+
   toggleNewCard(newState, columnIdx) {
     const newColumns = newState.columns;
     newColumns[columnIdx].addingState = !newColumns[columnIdx].addingState;
