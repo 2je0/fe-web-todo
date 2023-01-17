@@ -134,12 +134,24 @@ export default class App extends Component {
     this.deleteCardData(newColumns, oldColumnIdx, oldCardIdx);
     this.insertCardData(newColumns, newColumnIdx, newCardIdx, oldCardData);
 
+    const newHistorys = [...this.$state.historys];
+    const newHistory = {
+      imgUrl: './asset/user-img.svg',
+      userId: 'sam',
+      createdAt: new Date(),
+      initialState: this.$state.columns[oldColumnIdx].title,
+      finalState: this.$state.columns[newColumnIdx].title,
+      task: this.$state.columns[newColumnIdx].cards[newCardIdx].title,
+      actionType: '변경',
+    };
+    newHistorys.unshift(newHistory);
+
     putServerColumn(newColumns[oldColumnIdx].id, newColumns[oldColumnIdx]).then(
       () => {
         putServerColumn(newColumns[newColumnIdx].id, newColumns[newColumnIdx]);
       }
     );
-    this.setState({ columns: newColumns });
+    this.setState({ columns: newColumns, historys: newHistorys });
   }
 
   cancelAddingState(columnIdx) {

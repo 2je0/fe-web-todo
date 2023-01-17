@@ -33,7 +33,7 @@ export default class History extends Component {
       return `<span>${task}</span>를 <span>${finalState}</span>에서 <span>${actionType}</span>하였습니다.`;
     }
     if (actionType === '변경') {
-      return `<span>${initialState}</span>에서 <span>${finalState}</span>로 <span>${actionType}</span>하였습니다.`;
+      return `<span>${task}</span>를 <span>${initialState}</span>에서 <span>${finalState}</span>로 <span>${actionType}</span>하였습니다.`;
     }
     if (actionType === '이동') {
       return `<span>${task}</span>를 <span>${initialState}</span>에서 <span>${finalState}</span>로 <span>${actionType}</span>하였습니다.`;
