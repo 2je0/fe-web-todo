@@ -45,8 +45,8 @@ export async function getServerData(setState) {
   setState({ columns, historys });
 }
 
-export async function putServerColumn(columnIdx, columnData) {
-  const url = `http://localhost:3001/columns/${columnIdx}`;
+export async function putServerColumn(columnId, columnData) {
+  const url = `http://localhost:3001/columns/${columnId}`;
   const response = await fetch(url, {
     method: 'put',
     headers: {
@@ -58,8 +58,8 @@ export async function putServerColumn(columnIdx, columnData) {
   return data;
 }
 
-export async function deleteServerColumn(columnIdx) {
-  const url = `http://localhost:3001/columns/${columnIdx}`;
+export async function deleteServerColumn(columnId) {
+  const url = `http://localhost:3001/columns/${columnId}`;
   const response = await fetch(url, {
     method: 'delete',
     headers: {
