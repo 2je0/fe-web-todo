@@ -3,9 +3,10 @@ import TodoListApp from './components/TodoListApp.js';
 import Sidebar from './components/Sidebar.js';
 import Modal from './components/Modal.js';
 import {
+  addHistoryToServer,
   addNewColumnToServer,
   deleteServerColumn,
-  getServerColumns,
+  getServerData,
   putServerColumn,
 } from './util/fetchUtil.js';
 
@@ -15,7 +16,7 @@ export default class App extends Component {
       columns: [],
       historys: [],
     };
-    getServerColumns(this.setState.bind(this));
+    getServerData(this.setState.bind(this));
   }
 
   template() {
@@ -50,7 +51,7 @@ export default class App extends Component {
   setEvent() {
     this.addEvent('click', '.fab', () => {
       addNewColumnToServer().then(() => {
-        getServerColumns(this.setState.bind(this));
+        getServerData(this.setState.bind(this));
       });
     });
   }
@@ -78,7 +79,11 @@ export default class App extends Component {
     newColumns[columnIdx].cards.splice(cardIdx, 0, card); //unshift(card);
     newColumns[columnIdx].addingState = !newColumns[columnIdx].addingState;
 
-    putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]);
+    putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]).then(
+      () => {
+        addHistoryToServer(newHistory);
+      }
+    );
     this.setState({ columns: newColumns, historys: newHistorys });
   }
 
@@ -97,15 +102,17 @@ export default class App extends Component {
     const newColumns = [...this.$state.columns];
     newColumns[columnIdx].cards.splice(cardIdx, 1, newCardData);
 
-    putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]);
+    putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]).then(
+      () => {
+        addHistoryToServer(newHistory);
+      }
+    );
     this.setState({ columns: newColumns, historys: newHistorys });
   }
 
   deleteColumn(columnIdx) {
     const newColumns = [...this.$state.columns];
     newColumns.splice(columnIdx, 1);
-
-    deleteServerColumn(columnIdx);
     this.setState({ columns: newColumns });
   }
 
@@ -124,7 +131,11 @@ export default class App extends Component {
     const newColumns = [...this.$state.columns];
     newColumns[columnIdx].cards.splice(cardIdx, 1);
 
-    putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]);
+    putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]).then(
+      () => {
+        addHistoryToServer(newHistory);
+      }
+    );
     this.setState({ columns: newColumns, historys: newHistorys });
   }
 
@@ -146,18 +157,24 @@ export default class App extends Component {
     };
     newHistorys.unshift(newHistory);
 
-    putServerColumn(newColumns[oldColumnIdx].id, newColumns[oldColumnIdx]).then(
-      () => {
+    putServerColumn(newColumns[oldColumnIdx].id, newColumns[oldColumnIdx])
+      .then(() => {
         putServerColumn(newColumns[newColumnIdx].id, newColumns[newColumnIdx]);
-      }
-    );
+      })
+      .then(() => {
+        addHistoryToServer(newHistory);
+      });
     this.setState({ columns: newColumns, historys: newHistorys });
   }
 
   cancelAddingState(columnIdx) {
     const newColumns = [...this.$state.columns];
     newColumns[columnIdx].addingState = !newColumns[columnIdx].addingState;
-    putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]);
+    putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]).then(
+      () => {
+        addHistoryToServer(newHistory);
+      }
+    );
     this.setState({ columns: newColumns });
   }
 
@@ -165,7 +182,11 @@ export default class App extends Component {
     const newColumns = [...this.$state.columns];
     newColumns[columnIdx].title = newTitle;
 
-    putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]);
+    putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]).then(
+      () => {
+        addHistoryToServer(newHistory);
+      }
+    );
     this.setState({ columns: newColumns });
   }
 

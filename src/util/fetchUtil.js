@@ -14,17 +14,35 @@ export async function addNewColumnToServer() {
   });
 }
 
-export async function getServerColumns(setColumns) {
-  const url = 'http://localhost:3001/columns';
+export async function addHistoryToServer(newHistory) {
+  const url = 'http://localhost:3001/historys';
   const response = await fetch(url, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(newHistory),
+  });
+}
+
+export async function getServerData(setState) {
+  const columnUrl = 'http://localhost:3001/columns';
+  const historyUrl = 'http://localhost:3001/historys';
+  const columnResponse = await fetch(columnUrl, {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
     },
   });
-  const data = await response.json();
-  setColumns({ columns: data });
-  return data;
+  const historyResponse = await fetch(historyUrl, {
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  const columns = await columnResponse.json();
+  const historys = await historyResponse.json();
+  setState({ columns, historys });
 }
 
 export async function putServerColumn(columnIdx, columnData) {
