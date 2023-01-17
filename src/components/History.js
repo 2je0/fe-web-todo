@@ -14,7 +14,7 @@ export default class History extends Component {
           ${this.getDescription()}
 
         </div>
-        <div class="history-content-time">${createdAt}</div>
+        <div class="history-content-time">${this.timeForToday(createdAt)}</div>
       </div>
     </li>
     `;
@@ -38,5 +38,30 @@ export default class History extends Component {
     if (actionType === '이동') {
       return `<span>${task}</span>를 <span>${initialState}</span>에서 <span>${finalState}</span>로 <span>${actionType}</span>하였습니다.`;
     }
+  }
+
+  timeForToday(createdAt) {
+    const today = new Date();
+    const timeValue = new Date(createdAt);
+
+    const betweenTime = Math.floor(
+      (today.getTime() - timeValue.getTime()) / 1000 / 60
+    );
+    if (betweenTime < 1) return '방금 전';
+    if (betweenTime < 60) {
+      return `${betweenTime}분 전`;
+    }
+
+    const betweenTimeHour = Math.floor(betweenTime / 60);
+    if (betweenTimeHour < 24) {
+      return `${betweenTimeHour}시간 전`;
+    }
+
+    const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
+    if (betweenTimeDay < 365) {
+      return `${betweenTimeDay}일 전`;
+    }
+
+    return `${Math.floor(betweenTimeDay / 365)}년 전`;
   }
 }
