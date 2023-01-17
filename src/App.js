@@ -112,6 +112,8 @@ export default class App extends Component {
 
   deleteColumn(columnIdx) {
     const newColumns = [...this.$state.columns];
+    deleteServerColumn(newColumns[columnIdx].id);
+
     newColumns.splice(columnIdx, 1);
     this.setState({ columns: newColumns });
   }
