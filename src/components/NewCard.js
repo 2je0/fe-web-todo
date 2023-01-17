@@ -1,4 +1,6 @@
+import { ACTION } from '../constants.js';
 import Component from '../core/Component.js';
+import { TodoListStore } from '../store/TodoListStore.js';
 import PropertyFinder from '../util/PropertyFinder.js';
 
 export default class NewCard extends Component {
@@ -56,8 +58,14 @@ export default class NewCard extends Component {
       const targetProperty = new PropertyFinder(target);
       const { columnIdx, cardIdx, cardData, isModifying } =
         targetProperty.getAllProperty();
-      if (isModifying) this.$props.modifyCard(columnIdx, cardIdx, cardData);
-      if (!isModifying) this.$props.addCard(columnIdx, cardData);
+      if (isModifying)
+        TodoListStore.dispatch(ACTION.MODIFY_CARD, {
+          columnIdx,
+          cardIdx,
+          cardData,
+        });
+      if (!isModifying)
+        TodoListStore.dispatch(ACTION.ADD_CARD, { columnIdx, cardData });
     });
 
     this.addEvent('click', '.btn-normal', ({ target }) => {
@@ -69,7 +77,7 @@ export default class NewCard extends Component {
         this.$props.reRender();
         return;
       }
-      this.$props.cancelAddingState(columnIdx);
+      TodoListStore.dispatch(ACTION.CANCEL_ADDING_STATE, { columnIdx });
     });
 
     this.addEvent('keyup', '.todo-list-contents-detail', ({ key, target }) => {

@@ -23,13 +23,8 @@ export default class TodoListApp extends Component {
     );
     $columns.forEach(($column, idx) => {
       new Column($column, {
+        columnIdx: idx,
         column: this.$props.columns[idx],
-        addCard: this.$props.addCard,
-        deleteColumn: this.$props.deleteColumn,
-        toggleNewCard: this.$props.toggleNewCard,
-        cancelAddingState: this.$props.cancelAddingState,
-        modifyColumnTitle: this.$props.modifyColumnTitle,
-        modifyCard: this.$props.modifyCard,
         transferCard: this.$props.transferCard,
       });
     });

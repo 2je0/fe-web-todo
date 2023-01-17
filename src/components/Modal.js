@@ -1,5 +1,7 @@
 import { getDeletingCard, modalHide, revertDeletingState } from '../../util.js';
+import { ACTION } from '../constants.js';
 import Component from '../core/Component.js';
+import { TodoListStore } from '../store/TodoListStore.js';
 import PropertyFinder from '../util/PropertyFinder.js';
 
 export default class Modal extends Component {
@@ -25,7 +27,7 @@ export default class Modal extends Component {
       const { columnIdx, cardIdx } = targetProperty.getAllProperty();
       modalHide();
       setTimeout(() => {
-        this.$props.deleteCard(columnIdx, cardIdx);
+        TodoListStore.dispatch(ACTION.DELETE_CARD, { columnIdx, cardIdx });
       }, 300);
     });
 

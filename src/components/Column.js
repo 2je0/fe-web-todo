@@ -1,8 +1,9 @@
 import Component from '../core/Component.js';
-import PropertyFinder from '../util/PropertyFinder.js';
 import Card from './Card.js';
 import NewCard from './NewCard.js';
 import BUTTON from './Button.js';
+import { TodoListStore } from '../store/TodoListStore.js';
+import { ACTION } from '../constants.js';
 export default class Column extends Component {
   setup() {}
 
@@ -40,33 +41,27 @@ export default class Column extends Component {
     const $cards = this.$target.querySelectorAll('.card-container');
     $cards.forEach(($card, idx) => {
       new Card($card, {
+        columnIdx: this.$props.columnIdx,
+        cardIdx: idx,
         card: this.$props.column.cards[idx],
         deleteCard: this.$props.deleteCard,
-        addCard: this.$props.addCard,
-        modifyCard: this.$props.modifyCard,
         reRender: this.render.bind(this),
         transferCard: this.$props.transferCard,
       });
     });
 
     const $newCard = this.$target.querySelector('.new-card-container');
-    if (this.$props.column.addingState)
-      new NewCard($newCard, {
-        addCard: this.$props.addCard,
-        cancelAddingState: this.$props.cancelAddingState,
-      });
+    if (this.$props.column.addingState) new NewCard($newCard, {});
   }
 
   setEvent() {
-    this.addEvent('click', '.column-btn-plus', ({ target }) => {
-      const targetProperty = new PropertyFinder(target);
-      const columnIdx = targetProperty.getColumnIdx();
-      this.$props.toggleNewCard(columnIdx);
+    this.addEvent('click', '.column-btn-plus', () => {
+      const { columnIdx } = this.$props;
+      TodoListStore.dispatch(ACTION.TOGGLE_NEW_CARD, { columnIdx });
     });
-    this.addEvent('click', '.column-btn-x', ({ target }) => {
-      const targetProperty = new PropertyFinder(target);
-      const columnIdx = targetProperty.getColumnIdx();
-      this.$props.deleteColumn(columnIdx);
+    this.addEvent('click', '.column-btn-x', () => {
+      const { columnIdx } = this.$props;
+      TodoListStore.dispatch(ACTION.DELETE_COLUMN, { columnIdx });
     });
     this.addEvent('dblclick', '.todo-list-column-header-text', ({ target }) => {
       target.readOnly = false;
@@ -86,10 +81,12 @@ export default class Column extends Component {
   }
 
   exitModifyColumnTitle(target) {
-    const targetProperty = new PropertyFinder(target);
+    const columnIdx = this.$props.columnIdx;
     target.readOnly = true;
     target.classList.remove('outline');
-    const columnIdx = targetProperty.getColumnIdx();
-    this.$props.modifyColumnTitle(columnIdx, target.value);
+    TodoListStore.dispatch(ACTION.MODIFY_COLUMN_TITLE, {
+      columnIdx,
+      value: target.value,
+    });
   }
 }

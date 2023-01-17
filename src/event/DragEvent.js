@@ -1,3 +1,5 @@
+import { ACTION } from '../constants.js';
+import { TodoListStore } from '../store/TodoListStore.js';
 import PropertyFinder from '../util/PropertyFinder.js';
 
 class DragEvent {
@@ -34,8 +36,8 @@ class DragEvent {
     const dargTargetProperty = new PropertyFinder(event.target);
     const {
       cardContainer: $fixedDragNode,
-      columnIdx: oldcolumnIdx,
-      cardIdx: oldcardIdx,
+      columnIdx: oldColumnIdx,
+      cardIdx: oldCardIdx,
     } = dargTargetProperty.getAllProperty();
     this.$fixedDragNode = $fixedDragNode;
     this.$draggingNode = this.getDraggingNode($fixedDragNode);
@@ -58,7 +60,13 @@ class DragEvent {
       this.$draggingNode.style.transitionDuration = '0.5s';
       setTimeout(() => {
         this.removeBothDragNode();
-        this.transferCardFn(oldcolumnIdx, oldcardIdx, newColumnIdx, newCardIdx);
+        TodoListStore.dispatch(ACTION.TRANSFER_CARD, {
+          oldColumnIdx,
+          oldCardIdx,
+          newColumnIdx,
+          newCardIdx,
+        });
+        // this.transferCardFn(oldcolumnIdx, oldcardIdx, newColumnIdx, newCardIdx);
       }, 500);
     });
   }

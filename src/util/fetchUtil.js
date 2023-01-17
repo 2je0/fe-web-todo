@@ -43,6 +43,7 @@ export async function getServerData(setState) {
   const columns = await columnResponse.json();
   const historys = await historyResponse.json();
   setState({ columns, historys });
+  return { columns, historys };
 }
 
 export async function putServerColumn(columnId, columnData) {

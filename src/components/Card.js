@@ -46,7 +46,6 @@ export default class Card extends Component {
       const cardData = this.$props.card;
       new NewCard(this.$target, {
         card: cardData,
-        modifyCard: this.$props.modifyCard,
         reRender: this.$props.reRender,
       });
     });

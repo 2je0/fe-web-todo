@@ -2,21 +2,18 @@ import Component from './core/Component.js';
 import TodoListApp from './components/TodoListApp.js';
 import Sidebar from './components/Sidebar.js';
 import Modal from './components/Modal.js';
-import {
-  addHistoryToServer,
-  addNewColumnToServer,
-  deleteServerColumn,
-  getServerData,
-  putServerColumn,
-} from './util/fetchUtil.js';
+import { addNewColumnToServer, getServerData } from './util/fetchUtil.js';
+import { TodoListStore } from './store/TodoListStore.js';
 
 export default class App extends Component {
   setup() {
-    this.$state = {
-      columns: [],
-      historys: [],
-    };
-    getServerData(this.setState.bind(this));
+    getServerData(this.setState.bind(this)).then((data) => {
+      TodoListStore.dispatch('INIT_DATA', data);
+    });
+    TodoListStore.subscribe(() => {
+      this.render();
+      this.setEvent();
+    });
   }
 
   template() {
@@ -35,177 +32,13 @@ export default class App extends Component {
     new Sidebar($sidebar, { historys: this.$state.historys });
     new TodoListApp($todoListApp, {
       columns: this.$state.columns,
-      addCard: this.addCard.bind(this),
-      deleteColumn: this.deleteColumn.bind(this),
-      toggleNewCard: this.toggleNewCard.bind(this),
-      cancelAddingState: this.cancelAddingState.bind(this),
-      modifyColumnTitle: this.modifyColumnTitle.bind(this),
-      modifyCard: this.modifyCard.bind(this),
-      transferCard: this.transferCard.bind(this),
     });
-    new Modal($modal, {
-      deleteCard: this.deleteCard.bind(this),
-    });
+    new Modal($modal);
   }
 
   setEvent() {
     this.addEvent('click', '.fab', () => {
-      addNewColumnToServer().then(() => {
-        getServerData(this.setState.bind(this));
-      });
+      addNewColumnToServer().then(getServerData(this.setState.bind(this)));
     });
-  }
-
-  toggleNewCard(columnIdx) {
-    const newColumns = [...this.$state.columns];
-    newColumns[columnIdx].addingState = !newColumns[columnIdx].addingState;
-    putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]);
-    this.setState({ columns: newColumns });
-  }
-
-  addCard(columnIdx, card, cardIdx = 0) {
-    const newHistorys = [...this.$state.historys];
-    const newHistory = {
-      imgUrl: './asset/user-img.svg',
-      userId: 'sam',
-      createdAt: new Date(),
-      finalState: this.$state.columns[columnIdx].title,
-      actionType: '등록',
-      task: card.title,
-    };
-    newHistorys.unshift(newHistory);
-
-    const newColumns = [...this.$state.columns];
-    newColumns[columnIdx].cards.splice(cardIdx, 0, card); //unshift(card);
-    newColumns[columnIdx].addingState = !newColumns[columnIdx].addingState;
-
-    putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]).then(
-      () => {
-        addHistoryToServer(newHistory);
-      }
-    );
-    this.setState({ columns: newColumns, historys: newHistorys });
-  }
-
-  modifyCard(columnIdx, cardIdx, newCardData) {
-    const newHistorys = [...this.$state.historys];
-    const newHistory = {
-      imgUrl: './asset/user-img.svg',
-      userId: 'sam',
-      createdAt: new Date(),
-      initialState: newCardData.title,
-      finalState: this.$state.columns[columnIdx].cards[cardIdx].title,
-      actionType: '변경',
-    };
-    newHistorys.unshift(newHistory);
-
-    const newColumns = [...this.$state.columns];
-    newColumns[columnIdx].cards.splice(cardIdx, 1, newCardData);
-
-    putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]).then(
-      () => {
-        addHistoryToServer(newHistory);
-      }
-    );
-    this.setState({ columns: newColumns, historys: newHistorys });
-  }
-
-  deleteColumn(columnIdx) {
-    const newColumns = [...this.$state.columns];
-    deleteServerColumn(newColumns[columnIdx].id);
-
-    newColumns.splice(columnIdx, 1);
-    this.setState({ columns: newColumns });
-  }
-
-  deleteCard(columnIdx, cardIdx) {
-    const newHistorys = [...this.$state.historys];
-    const newHistory = {
-      imgUrl: './asset/user-img.svg',
-      userId: 'sam',
-      createdAt: new Date(),
-      finalState: this.$state.columns[columnIdx].title,
-      task: this.$state.columns[columnIdx].cards[cardIdx].title,
-      actionType: '삭제',
-    };
-    newHistorys.unshift(newHistory);
-
-    const newColumns = [...this.$state.columns];
-    newColumns[columnIdx].cards.splice(cardIdx, 1);
-
-    putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]).then(
-      () => {
-        addHistoryToServer(newHistory);
-      }
-    );
-    this.setState({ columns: newColumns, historys: newHistorys });
-  }
-
-  transferCard(oldColumnIdx, oldCardIdx, newColumnIdx, newCardIdx) {
-    const newColumns = [...this.$state.columns];
-    const oldCardData = this.getCardData(oldColumnIdx, oldCardIdx);
-    this.deleteCardData(newColumns, oldColumnIdx, oldCardIdx);
-    this.insertCardData(newColumns, newColumnIdx, newCardIdx, oldCardData);
-
-    const newHistorys = [...this.$state.historys];
-    const newHistory = {
-      imgUrl: './asset/user-img.svg',
-      userId: 'sam',
-      createdAt: new Date(),
-      initialState: this.$state.columns[oldColumnIdx].title,
-      finalState: this.$state.columns[newColumnIdx].title,
-      task: this.$state.columns[newColumnIdx].cards[newCardIdx].title,
-      actionType: '변경',
-    };
-    newHistorys.unshift(newHistory);
-
-    putServerColumn(newColumns[oldColumnIdx].id, newColumns[oldColumnIdx])
-      .then(() => {
-        putServerColumn(newColumns[newColumnIdx].id, newColumns[newColumnIdx]);
-      })
-      .then(() => {
-        addHistoryToServer(newHistory);
-      });
-    this.setState({ columns: newColumns, historys: newHistorys });
-  }
-
-  cancelAddingState(columnIdx) {
-    const newColumns = [...this.$state.columns];
-    newColumns[columnIdx].addingState = !newColumns[columnIdx].addingState;
-    putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]).then(
-      () => {
-        addHistoryToServer(newHistory);
-      }
-    );
-    this.setState({ columns: newColumns });
-  }
-
-  modifyColumnTitle(columnIdx, newTitle) {
-    const newColumns = [...this.$state.columns];
-    newColumns[columnIdx].title = newTitle;
-
-    putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]).then(
-      () => {
-        addHistoryToServer(newHistory);
-      }
-    );
-    this.setState({ columns: newColumns });
-  }
-
-  getCardData(columnIdx, cardIdx) {
-    return { ...this.$state.columns[columnIdx].cards[cardIdx] };
-  }
-  deleteCardData(columns, columnIdx, cardIdx) {
-    columns[columnIdx].cards.splice(cardIdx, 1);
-  }
-  exchangeCardData(columns, columnIdx, cardIdx, cardData) {
-    columns[columnIdx].cards.splice(cardIdx, 1, cardData);
-  }
-  insertCardData(columns, columnIdx, cardIdx, cardData) {
-    columns[columnIdx].cards.splice(cardIdx, 0, cardData);
-  }
-  columnIdGenerator() {
-    const ids = this.$state.columns.map((ele) => ele.id);
-    console.log(ids);
   }
 }
