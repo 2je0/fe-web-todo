@@ -1,0 +1,57 @@
+{
+  "columns": [
+    {
+      "id": 0,
+      "title": "한 일asd",
+      "cards": [
+        {
+          "title": "디자인 패턴 공부하기",
+          "details": ["mvvm 패턴", "flux 패턴"],
+          "footer": "author by web"
+        },
+        {
+          "id": 2,
+          "title": "gitHub 공부하기",
+          "details": ["gitbub 공부내용", "git action"],
+          "footer": "author by web"
+        }
+      ],
+      "addingState": true
+    },
+    {
+      "id": 1,
+      "title": "한 일",
+      "cards": [
+        {
+          "title": "목 서버 구현하기",
+          "details": ["포스트 맨asd", "json server"],
+          "footer": "author by web"
+        },
+        {
+          "title": "디자인 패턴 공부하기",
+          "details": ["mvvm 패턴", "flux 패턴"],
+          "footer": "author by web"
+        },
+        {
+          "title": "목 서버 구현하기",
+          "details": ["포스트 맨", "json server"],
+          "footer": "author by web"
+        }
+      ],
+      "addingState": false
+    },
+    {
+      "title": "제목 없음",
+      "cards": [
+        {
+          "title": "a",
+          "details": [],
+          "footer": "author by web"
+        }
+      ],
+      "addingState": false,
+      "id": 2
+    }
+  ],
+  "history": []
+}

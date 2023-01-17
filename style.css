@@ -50,6 +50,7 @@ menu {
   transition: all 0.5s ease-in-out;
 
   padding: 40px 80px 0px 40px;
+  overflow: scroll;
 }
 .history-container {
 }
