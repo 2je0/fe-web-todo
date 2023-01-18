@@ -57,7 +57,9 @@ class DragEvent {
       const diffYPosition =
         fixedDragNodePosition.top - draggingNodePosition.top;
       this.$draggingNode.style.transform = `translate(${diffXPosition}px,${diffYPosition}px)`;
-      this.$draggingNode.style.transitionDuration = '0.5s';
+      this.$draggingNode.style.transitionDuration = '0.4s';
+      this.$draggingNode.style.transitionTimingFunction =
+        'cubic-bezier(.13,.7,.31,.79)';
       setTimeout(() => {
         this.removeBothDragNode();
         TodoListStore.dispatch(ACTION.TRANSFER_CARD, {
@@ -66,7 +68,7 @@ class DragEvent {
           newColumnIdx,
           newCardIdx,
         });
-      }, 500);
+      }, 400);
     });
   }
 
@@ -98,26 +100,25 @@ class DragEvent {
     this.draggingNodeMoveAt(event.pageX, event.pageY);
     const { $droppableBelow, isUpperSide } = this.getDroppableBelow(event);
     if (!$droppableBelow) return;
-    if (this.$currentDroppable !== $droppableBelow) {
+    const isNewNodeState = this.$currentDroppable !== $droppableBelow;
+    const isDummyNode = $droppableBelow.classList.contains('dummy-droppable');
+    const isChangeUpDownSide = this.isCurrentSideUpper !== isUpperSide;
+
+    if (isNewNodeState) {
       this.$currentDroppable = $droppableBelow;
-      if ($droppableBelow.classList.contains('dummy-droppable')) {
-        $droppableBelow.previousElementSibling.insertAfter(this.$fixedDragNode);
-        return;
+      if (isDummyNode) {
+        $droppableBelow.before(this.$fixedDragNode);
+      } else {
+        if (isUpperSide) $droppableBelow.before(this.$fixedDragNode);
+        else $droppableBelow.after(this.$fixedDragNode);
+        this.isCurrentSideUpper = isUpperSide;
       }
-      if (isUpperSide)
-        $droppableBelow.previousElementSibling.insertAfter(this.$fixedDragNode);
-      else $droppableBelow.insertAfter(this.$fixedDragNode);
-    }
-    if (this.$currentDroppable === $droppableBelow) {
-      if (this.isCurrentSideUpper === isUpperSide) return;
+    } else {
+      if (isDummyNode) return;
+      if (!isChangeUpDownSide) return;
+      if (isUpperSide) $droppableBelow.before(this.$fixedDragNode);
+      else $droppableBelow.after(this.$fixedDragNode);
       this.isCurrentSideUpper = isUpperSide;
-      if ($droppableBelow.classList.contains('dummy-droppable')) {
-        $droppableBelow.previousElementSibling.insertAfter(this.$fixedDragNode);
-        return;
-      }
-      if (isUpperSide)
-        $droppableBelow.previousElementSibling.insertAfter(this.$fixedDragNode);
-      else $droppableBelow.insertAfter(this.$fixedDragNode);
     }
   }
 
@@ -137,6 +138,24 @@ class DragEvent {
     const rect = $droppableBelow && $droppableBelow.getBoundingClientRect();
     const isUpperSide = rect && event.clientY < rect.top + rect.height / 2;
     return { $droppableBelow, isUpperSide };
+  }
+
+  getDiffVector(nodeTo, nodeFrom) {
+    const nodeToPosition = nodeTo.getBoundingClientRect();
+    const nodeFromPosition = nodeFrom.getBoundingClientRect();
+    const diffXPosition = nodeToPosition.left - nodeFromPosition.left;
+    const diffYPosition = nodeToPosition.top - nodeFromPosition.top;
+    nodeFrom.style.transform = `translate(${diffXPosition}px,${diffYPosition}px)`;
+    nodeFrom.style.transitionDuration = '0.2s';
+  }
+
+  animation($droppableBelow, afterBefore) {
+    this.getDiffVector($droppableBelow, this.$fixedDragNode);
+    setTimeout(() => {
+      if (afterBefore === 'after') $droppableBelow.after(this.$fixedDragNode);
+      if (afterBefore === 'before') $droppableBelow.before(this.$fixedDragNode);
+      this.$fixedDragNode.style.transform = `translate(0px,0px)`;
+    }, 200);
   }
 }
 export default DragEvent;

@@ -420,4 +420,15 @@ menu {
 .dummy-droppable {
   flex-grow: 1;
   min-height: 80px;
+  margin: 8px 0;
+}
+.animation-init {
+  opacity: 0;
+  padding-top: 1em;
+}
+
+.animation-fade {
+  opacity: 1;
+  padding-top: 0;
+  transition: all 1s;
 }
