@@ -2,7 +2,6 @@ import {
   addHistoryToServer,
   addNewColumnToServer,
   deleteServerColumn,
-  getServerData,
   putServerColumn,
 } from '../util/fetchUtil.js';
 

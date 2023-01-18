@@ -1,4 +1,8 @@
-import { getDeletingCard, modalHide, revertDeletingState } from '../../util.js';
+import {
+  getDeletingCard,
+  modalHide,
+  revertDeletingState,
+} from '../util/util.js';
 import { ACTION } from '../constants.js';
 import Component from '../core/Component.js';
 import { TodoListStore } from '../store/TodoListStore.js';

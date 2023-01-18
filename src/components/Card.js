@@ -1,4 +1,4 @@
-import { modalShow } from '../../util.js';
+import { modalShow } from '../util/util.js';
 import Component from '../core/Component.js';
 import DragEvent from '../event/DragEvent.js';
 import { TodoListStore } from '../store/TodoListStore.js';
