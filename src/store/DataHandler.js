@@ -2,6 +2,7 @@ import {
   addHistoryToServer,
   addNewColumnToServer,
   deleteServerColumn,
+  getServerData,
   putServerColumn,
 } from '../util/fetchUtil.js';
 
@@ -144,6 +145,7 @@ export const DataHandler = {
     return { columns: newColumns, historys: newHistorys };
   },
   getCardData(columns, columnIdx, cardIdx) {
+    if (!columns[columnIdx].cards) debugger;
     return { ...columns[columnIdx].cards[cardIdx] };
   },
   deleteCardData(columns, columnIdx, cardIdx) {

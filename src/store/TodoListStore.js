@@ -1,6 +1,7 @@
 import { Store } from './Store.js';
 import { ACTION } from '../constants.js';
 import { DataHandler } from './DataHandler.js';
+import { getServerData } from '../util/fetchUtil.js';
 const initState = { columns: [], historys: [] };
 
 const reducer = (state, actionKey, payload = {}) => {
@@ -11,7 +12,7 @@ const reducer = (state, actionKey, payload = {}) => {
     case ACTION.ADD_COLUMN:
       return DataHandler.addColumn(newState);
     case ACTION.INIT_DATA:
-      return payload;
+      return getServerData();
     case ACTION.TOGGLE_NEW_CARD:
       return DataHandler.toggleNewCard(newState, columnIdx);
     case ACTION.DELETE_COLUMN:
@@ -39,8 +40,4 @@ const reducer = (state, actionKey, payload = {}) => {
   }
 };
 
-/**
- * @actionKey `ADD_ITEM`
- * @state { recentlyViewedList: string[] }
- */
 export const TodoListStore = new Store(initState, reducer);

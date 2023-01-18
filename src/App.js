@@ -2,16 +2,12 @@ import Component from './core/Component.js';
 import TodoListApp from './components/TodoListApp.js';
 import Sidebar from './components/Sidebar.js';
 import Modal from './components/Modal.js';
-import { getServerData } from './util/fetchUtil.js';
 import { TodoListStore } from './store/TodoListStore.js';
 import { ACTION } from './constants.js';
 
 export default class App extends Component {
-  //TODO: getServerData dispatch랑 합치기
   setup() {
-    getServerData(this.setState.bind(this)).then((data) => {
-      TodoListStore.dispatch('INIT_DATA', data);
-    });
+    TodoListStore.dispatch(ACTION.INIT_DATA);
     TodoListStore.subscribe(this.render.bind(this));
   }
 

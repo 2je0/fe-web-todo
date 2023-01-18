@@ -7,70 +7,47 @@ export async function addNewColumnToServer() {
     cards: [],
     addingState: false,
   };
-  const response = await fetch(url, {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(newColumnData),
-  });
+  const response = await fetch(url, getFetchData('post', newColumnData));
   const data = await response.json();
   return data.id;
 }
 
 export async function addHistoryToServer(newHistory) {
   const url = `${BASE_URL}/historys`;
-  const response = await fetch(url, {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(newHistory),
-  });
+  const response = await fetch(url, getFetchData('post', newHistory));
 }
 
-export async function getServerData(setState) {
+export async function getServerData() {
   const columnUrl = `${BASE_URL}/columns`;
   const historyUrl = `${BASE_URL}/historys`;
-  const columnResponse = await fetch(columnUrl, {
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  const historyResponse = await fetch(historyUrl, {
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  const columnResponse = await fetch(columnUrl, getFetchData('get'));
+  const historyResponse = await fetch(historyUrl, getFetchData('get'));
   const columns = await columnResponse.json();
   const historys = await historyResponse.json();
-  setState({ columns, historys });
   return { columns, historys };
 }
 
 export async function putServerColumn(columnId, columnData) {
   const url = `${BASE_URL}/columns/${columnId}`;
-  const response = await fetch(url, {
-    method: 'put',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(columnData),
-  });
+  const response = await fetch(url, getFetchData('put', columnData));
   const data = await response.json();
   return data;
 }
 
 export async function deleteServerColumn(columnId) {
   const url = `${BASE_URL}/columns/${columnId}`;
-  const response = await fetch(url, {
-    method: 'delete',
+  const response = await fetch(url, getFetchData('delete'));
+  const data = await response.json();
+  return data;
+}
+
+function getFetchData(method, obj) {
+  const ret = {
+    method,
     headers: {
       'Content-Type': 'application/json',
     },
-  });
-  const data = await response.json();
-  return data;
+  };
+  if (obj) ret.body = JSON.stringify(obj);
+  return ret;
 }

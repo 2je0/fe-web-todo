@@ -66,7 +66,6 @@ class DragEvent {
           newColumnIdx,
           newCardIdx,
         });
-        // this.transferCardFn(oldcolumnIdx, oldcardIdx, newColumnIdx, newCardIdx);
       }, 500);
     });
   }
