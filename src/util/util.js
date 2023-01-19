@@ -33,7 +33,7 @@ export const revertDeletingState = () => {
 
 export function resizeTextArea(obj) {
   obj.style.height = '14px';
-  obj.style.height = obj.scrollHeight + 20 + 'px';
+  obj.style.height = obj.scrollHeight + 'px';
 }
 
 export function getNewCard() {

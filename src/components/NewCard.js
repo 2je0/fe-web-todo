@@ -77,6 +77,12 @@ export default class NewCard extends Component {
       TodoListStore.dispatch(ACTION.CANCEL_ADDING_STATE, { columnIdx });
     });
 
+    this.addEvent('keyup', '.todo-list-contents-header-text', ({ target }) => {
+      const $btn = this.$target.querySelector('.btn-accent');
+      if (target.value.trim() !== '') $btn.disabled = false;
+      else $btn.disabled = true;
+    });
+
     this.addEvent('keydown', 'textarea', ({ target }) => {
       resizeTextArea(target);
     });

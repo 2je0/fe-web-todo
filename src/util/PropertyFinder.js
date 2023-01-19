@@ -47,7 +47,10 @@ export default class PropertyFinder {
     const $details = this.#cardContainer.querySelector(
       '.todo-list-contents-desc-container'
     );
-    const areaText = $details.querySelector('textarea')?.value.split('\n');
+    const areaText = $details
+      .querySelector('textarea')
+      ?.value.split('\n')
+      .filter((ele) => ele !== '');
     const liText = [...$details.querySelectorAll('li')].map(
       ({ value }) => value
     );
