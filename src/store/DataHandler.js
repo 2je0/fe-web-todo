@@ -4,17 +4,15 @@ import {
   deleteServerColumn,
   putServerColumn,
 } from '../util/fetchUtil.js';
+import { getNewColumn } from '../util/util.js';
 
 export const DataHandler = {
   async addColumn(newState) {
     const id = await addNewColumnToServer();
-    const newColumnData = {
-      title: '제목 없음',
-      cards: [],
-      addingState: false,
-      id,
-    };
+    const newColumnData = getNewColumn();
+    newColumnData.id = id;
     newState.columns.push(newColumnData);
+    console.log(newState);
     return newState;
   },
 
@@ -25,7 +23,7 @@ export const DataHandler = {
     return newState;
   },
 
-  modifyCard(newState, columnIdx, cardIdx, newCardData) {
+  async modifyCard(newState, columnIdx, cardIdx, newCardData) {
     const newHistorys = newState.historys;
     const newColumns = newState.columns;
     const newHistory = {
@@ -40,15 +38,12 @@ export const DataHandler = {
 
     newColumns[columnIdx].cards.splice(cardIdx, 1, newCardData);
 
-    putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]).then(
-      () => {
-        addHistoryToServer(newHistory);
-      }
-    );
+    await putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]);
+    await addHistoryToServer(newHistory);
     return newState;
   },
 
-  addCard(newState, columnIdx, cardData) {
+  async addCard(newState, columnIdx, cardData) {
     const newHistorys = newState.historys;
     const newColumns = newState.columns;
     const newHistory = {
@@ -64,11 +59,8 @@ export const DataHandler = {
     newColumns[columnIdx].cards.unshift(cardData);
     newColumns[columnIdx].addingState = !newColumns[columnIdx].addingState;
 
-    putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]).then(
-      () => {
-        addHistoryToServer(newHistory);
-      }
-    );
+    await putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]);
+    await addHistoryToServer(newHistory);
     return newState;
   },
 
@@ -78,7 +70,7 @@ export const DataHandler = {
     return newState;
   },
 
-  deleteCard(newState, columnIdx, cardIdx) {
+  async deleteCard(newState, columnIdx, cardIdx) {
     const newHistorys = newState.historys;
     const newColumns = newState.columns;
     const newHistory = {
@@ -93,11 +85,8 @@ export const DataHandler = {
 
     newColumns[columnIdx].cards.splice(cardIdx, 1);
 
-    putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]).then(
-      () => {
-        addHistoryToServer(newHistory);
-      }
-    );
+    await putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]);
+    await addHistoryToServer(newHistory);
     return newState;
   },
 
@@ -110,13 +99,19 @@ export const DataHandler = {
 
   modifyColumnTitle(newState, columnIdx, newTitle) {
     const newColumns = newState.columns;
-    newColumns[columnIdx].title = newTitle;
-
-    putServerColumn(newColumns[columnIdx].id, newColumns[columnIdx]).then();
+    const newColumn = newColumns[columnIdx];
+    newColumn.title = newTitle;
+    putServerColumn(newColumn.id, newColumn);
     return newState;
   },
 
-  transferCard(newState, oldColumnIdx, oldCardIdx, newColumnIdx, newCardIdx) {
+  async transferCard(
+    newState,
+    oldColumnIdx,
+    oldCardIdx,
+    newColumnIdx,
+    newCardIdx
+  ) {
     const newColumns = [...newState.columns];
     const oldCardData = this.getCardData(newColumns, oldColumnIdx, oldCardIdx);
     this.deleteCardData(newColumns, oldColumnIdx, oldCardIdx);
@@ -133,18 +128,15 @@ export const DataHandler = {
       actionType: '변경',
     };
     newHistorys.unshift(newHistory);
+    const columnFrom = newColumns[oldColumnIdx];
+    const columnTo = newColumns[newColumnIdx];
+    await putServerColumn(columnFrom.id, columnFrom);
+    await putServerColumn(columnTo.id, columnTo);
+    await addHistoryToServer(newHistory);
 
-    putServerColumn(newColumns[oldColumnIdx].id, newColumns[oldColumnIdx])
-      .then(() => {
-        putServerColumn(newColumns[newColumnIdx].id, newColumns[newColumnIdx]);
-      })
-      .then(() => {
-        addHistoryToServer(newHistory);
-      });
     return { columns: newColumns, historys: newHistorys };
   },
   getCardData(columns, columnIdx, cardIdx) {
-    if (!columns[columnIdx].cards) debugger;
     return { ...columns[columnIdx].cards[cardIdx] };
   },
   deleteCardData(columns, columnIdx, cardIdx) {

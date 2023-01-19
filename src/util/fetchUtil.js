@@ -12,7 +12,7 @@ export async function addNewColumnToServer() {
 
 export async function addHistoryToServer(newHistory) {
   const url = `${BASE_URL}/historys`;
-  const response = await fetch(url, getFetchData('post', newHistory));
+  await fetch(url, getFetchData('post', newHistory));
 }
 
 export async function getServerData() {
