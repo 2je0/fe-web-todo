@@ -1,6 +1,8 @@
 # fe-web-todo
 
-# 도전 ⁉️
+# 기능
+
+# 도전사항 ⁉️
 
 ## 드래그와 더블클릭 같이 쓰기
 
@@ -37,11 +39,14 @@ mousedown 이벤트는 다음과 같이 구성합니다.
 
 ## 드래그 앤 드랍 구현하기
 
+![](./gif/dragNdrop.gif)
+
 ---
 
 ## json-server 연동하기
 
 서버 돌리기 `json-server --watch db.json --port 3001`
+![](./gif/json-server.gif)
 
 ---
 
@@ -54,3 +59,5 @@ mousedown 이벤트는 다음과 같이 구성합니다.
 ---
 
 ## card details 늘리기
+
+![](./gif/add-detail.gif)
