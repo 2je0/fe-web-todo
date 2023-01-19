@@ -53,7 +53,7 @@ export default class Card extends Component {
       });
     });
 
-    const dragEvent = new DragEvent(this.$props.transferCard);
+    const dragEvent = new DragEvent();
 
     this.addEvent('mousedown', '.card-container:not(.modifying)', (e) => {
       dragEvent.mouseDown(e);

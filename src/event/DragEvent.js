@@ -6,15 +6,12 @@ class DragEvent {
   DELAY = 400;
   timer = null;
   isPress = false;
-  transferCardFn;
   $currentDroppable = null;
   isCurrentSideUpper = null;
   $draggingNode;
   $fixedDragNode;
 
-  constructor(transferCardFn) {
-    this.transferCardFn = transferCardFn;
-  }
+  constructor() {}
 
   mouseDown(event) {
     this.isPress = true;
@@ -33,6 +30,33 @@ class DragEvent {
   }
 
   drag(event) {
+    const onMouseMoveCallBack = this.onMouseMove.bind(this);
+    this.setDraggingNodeProperty(event);
+    document.addEventListener('mousemove', onMouseMoveCallBack);
+
+    this.$draggingNode.addEventListener('mouseup', () => {
+      this.dragEnd(onMouseMoveCallBack);
+    });
+  }
+
+  dragEnd(onMouseMoveCallBack) {
+    const { columnIdx: newColumnIdx, cardIdx: newCardIdx } =
+      this.getIdxOfFixedDragNode();
+    document.removeEventListener('mousemove', onMouseMoveCallBack);
+
+    this.attachReturnAnimation(this.$fixedDragNode, this.$draggingNode);
+    setTimeout(() => {
+      this.removeBothDragNode();
+      TodoListStore.dispatch(ACTION.TRANSFER_CARD, {
+        oldColumnIdx: this.oldColumnIdx,
+        oldCardIdx: this.oldCardIdx,
+        newColumnIdx,
+        newCardIdx,
+      });
+    }, 400);
+  }
+
+  setDraggingNodeProperty(event) {
     const dargTargetProperty = new PropertyFinder(event.target);
     const {
       cardContainer: $fixedDragNode,
@@ -40,40 +64,12 @@ class DragEvent {
       cardIdx: oldCardIdx,
     } = dargTargetProperty.getAllProperty();
     this.$fixedDragNode = $fixedDragNode;
+    this.oldColumnIdx = oldColumnIdx;
+    this.oldCardIdx = oldCardIdx;
     this.$draggingNode = this.getDraggingNode($fixedDragNode);
-    this.draggingNodeMoveAt(event.pageX, event.pageY);
-    const onMouseMoveCallBack = this.onMouseMove.bind(this);
-    document.addEventListener('mousemove', onMouseMoveCallBack);
-
-    this.$draggingNode.addEventListener('mouseup', () => {
-      const { columnIdx: newColumnIdx, cardIdx: newCardIdx } =
-        this.getIdxOfFixedDragNode();
-      document.removeEventListener('mousemove', onMouseMoveCallBack);
-
-      const fixedDragNodePosition = this.$fixedDragNode.getBoundingClientRect();
-      const draggingNodePosition = this.$draggingNode.getBoundingClientRect();
-      const diffXPosition =
-        fixedDragNodePosition.left - draggingNodePosition.left;
-      const diffYPosition =
-        fixedDragNodePosition.top - draggingNodePosition.top;
-      this.$draggingNode.style.transform = `translate(${diffXPosition}px,${diffYPosition}px)`;
-      this.$draggingNode.style.transitionDuration = '0.4s';
-      this.$draggingNode.style.transitionTimingFunction =
-        'cubic-bezier(.13,.7,.31,.79)';
-      setTimeout(() => {
-        this.removeBothDragNode();
-        TodoListStore.dispatch(ACTION.TRANSFER_CARD, {
-          oldColumnIdx,
-          oldCardIdx,
-          newColumnIdx,
-          newCardIdx,
-        });
-      }, 400);
-    });
   }
 
   removeBothDragNode() {
-    this.$draggingNode.onmouseup = null;
     this.$fixedDragNode.remove();
     this.$draggingNode.remove();
   }
@@ -140,13 +136,22 @@ class DragEvent {
     return { $droppableBelow, isUpperSide };
   }
 
+  attachReturnAnimation(nodeTo, nodeFrom) {
+    const { diffXPosition, diffYPosition } = this.getDiffVector(
+      nodeTo,
+      nodeFrom
+    );
+    nodeFrom.style.transform = `translate(${diffXPosition}px,${diffYPosition}px)`;
+    nodeFrom.style.transitionDuration = '0.4s';
+    nodeFrom.style.transitionTimingFunction = 'cubic-bezier(.13,.7,.31,.79)';
+  }
+
   getDiffVector(nodeTo, nodeFrom) {
     const nodeToPosition = nodeTo.getBoundingClientRect();
     const nodeFromPosition = nodeFrom.getBoundingClientRect();
     const diffXPosition = nodeToPosition.left - nodeFromPosition.left;
     const diffYPosition = nodeToPosition.top - nodeFromPosition.top;
-    nodeFrom.style.transform = `translate(${diffXPosition}px,${diffYPosition}px)`;
-    nodeFrom.style.transitionDuration = '0.2s';
+    return { diffXPosition, diffYPosition };
   }
 
   animation($droppableBelow, afterBefore) {
