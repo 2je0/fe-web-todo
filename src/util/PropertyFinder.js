@@ -44,19 +44,14 @@ export default class PropertyFinder {
       .value;
   }
   getDetails() {
-    const ret = [];
-    const $details = this.#cardContainer
-      .querySelector('.todo-list-contents-desc-container')
-      .querySelectorAll('input');
-    $details.forEach((ele) => {
-      if (ele.value) ret.push(ele.value);
-    });
-    return ret;
-    // this[#cardContainer].querySelectorAll(...).map is not a function
-    // return this.#cardContainer
-    //   .querySelectorAll('.todo-list-contents-desc-container')
-    //   .map((ele) => ele.value)
-    //   .filter((ele) => ele !== '');
+    const $details = this.#cardContainer.querySelector(
+      '.todo-list-contents-desc-container'
+    );
+    const areaText = $details.querySelector('textarea')?.value.split('\n');
+    const liText = [...$details.querySelectorAll('li')].map(
+      ({ value }) => value
+    );
+    return liText.length ? liText : areaText;
   }
 
   findIdx(arr, target) {

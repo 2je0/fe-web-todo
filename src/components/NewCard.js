@@ -2,23 +2,22 @@ import { ACTION } from '../constants.js';
 import Component from '../core/Component.js';
 import { TodoListStore } from '../store/TodoListStore.js';
 import PropertyFinder from '../util/PropertyFinder.js';
-
+import { getNewCard, resizeTextArea } from '../util/util.js';
 export default class NewCard extends Component {
   setup() {
-    this.$state = this.$props.card || {
-      title: '',
-      details: [],
-      footer: 'author by web',
-    };
+    this.$state = this.$props.card || getNewCard();
   }
 
-  detailTemplate(datail = '') {
+  detailTemplate(datails = []) {
     return `
-    <input
+    <textarea
       placeholder="내용을 입력하세요"
       class="todo-list-contents-detail"
-      value="${datail}"
-    />
+      wrap="hard"
+      cols="35"
+      rows="1"
+      style="white-space: pre-line;"
+    >${datails.join(`\n`)}</textarea>
   `;
   }
 
@@ -34,10 +33,7 @@ export default class NewCard extends Component {
         />
       </div>
       <ul class="todo-list-contents-desc-container">
-        ${
-          details.map((detail) => this.detailTemplate(detail)).join('') ||
-          this.detailTemplate()
-        } 
+        ${this.detailTemplate(details)}
       </ul>
       <div class="todo-list-new-contents-btn-container">
         <button class="btn btn-normal">취소</button>
@@ -51,6 +47,7 @@ export default class NewCard extends Component {
     const $accentBtn = this.$target.querySelector('.btn-accent');
     const title = cardData?.title || '';
     if (title) $accentBtn.disabled = false;
+    resizeTextArea(this.$target.querySelector('textarea'));
   }
 
   setEvent() {
@@ -80,29 +77,12 @@ export default class NewCard extends Component {
       TodoListStore.dispatch(ACTION.CANCEL_ADDING_STATE, { columnIdx });
     });
 
-    this.addEvent('keyup', '.todo-list-contents-detail', ({ key, target }) => {
-      if (key === 'Enter' && target.value.trim() !== '') {
-        const node = document.createElement('input');
-        node.classList.add('todo-list-contents-detail');
-        node.placeholder = '내용을 입력하세요';
-        target.insertAfter(node);
-        node.focus();
-      }
-      if (key === 'Backspace' && target.value === '') {
-        const previousNode = target.previousElementSibling;
-        const isInputNode = previousNode?.classList.contains(
-          'todo-list-contents-detail'
-        );
-        if (!isInputNode) return;
-        previousNode.focus();
-        target.remove();
-      }
+    this.addEvent('keydown', 'textarea', ({ target }) => {
+      resizeTextArea(target);
     });
 
-    this.addEvent('keyup', '.todo-list-contents-header-text', ({ target }) => {
-      const $btn = this.$target.querySelector('.btn-accent');
-      if (target.value.trim() !== '') $btn.disabled = false;
-      else $btn.disabled = true;
+    this.addEvent('keyup', 'textarea', ({ target }) => {
+      resizeTextArea(target);
     });
   }
 }

@@ -1,12 +1,10 @@
+import { getNewColumn } from './util.js';
+
 const BASE_URL = 'http://localhost:3001';
 
 export async function addNewColumnToServer() {
   const url = `${BASE_URL}/columns`;
-  const newColumnData = {
-    title: '제목 없음',
-    cards: [],
-    addingState: false,
-  };
+  const newColumnData = getNewColumn();
   const response = await fetch(url, getFetchData('post', newColumnData));
   const data = await response.json();
   return data.id;
@@ -41,13 +39,13 @@ export async function deleteServerColumn(columnId) {
   return data;
 }
 
-function getFetchData(method, obj) {
+function getFetchData(method, bodyDataObject) {
   const ret = {
     method,
     headers: {
       'Content-Type': 'application/json',
     },
   };
-  if (obj) ret.body = JSON.stringify(obj);
+  if (bodyDataObject) ret.body = JSON.stringify(bodyDataObject);
   return ret;
 }

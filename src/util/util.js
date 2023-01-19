@@ -30,3 +30,24 @@ export const revertDeletingState = () => {
   if (!deletingCard) return;
   deletingCard.classList.remove('content-delete');
 };
+
+export function resizeTextArea(obj) {
+  obj.style.height = '14px';
+  obj.style.height = obj.scrollHeight + 20 + 'px';
+}
+
+export function getNewCard() {
+  return {
+    title: '',
+    details: [],
+    footer: 'author by web',
+  };
+}
+
+export function getNewColumn() {
+  return {
+    title: '제목 없음',
+    cards: [],
+    addingState: false,
+  };
+}
