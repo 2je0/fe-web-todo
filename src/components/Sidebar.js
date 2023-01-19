@@ -6,7 +6,12 @@ import History from './History.js';
 export default class Sidebar extends Component {
   setup() {
     const { historys } = TodoListStore.getState();
-    this.$state = historys ? historys.reverse() : [];
+    const sortedHistorys = [...historys].sort((a, b) => {
+      const aDate = new Date(a.createdAt);
+      const bDate = new Date(b.createdAt);
+      return bDate - aDate;
+    });
+    this.$state = sortedHistorys;
   }
 
   template() {
