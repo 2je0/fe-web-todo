@@ -22,6 +22,7 @@ textarea {
   line-height: 20px;
   margin-left: 16px;
   border: none;
+  outline: none;
 }
 html,
 body {
