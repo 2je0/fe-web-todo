@@ -59,9 +59,194 @@ mousedown 이벤트는 다음과 같이 구성합니다.
 
 ---
 
-## 드래그 앤 드랍 구현하기
+## 🚀 드래그 앤 드랍 구현하기 🚀
 
 ![](./gif/dragNdrop.gif)
+
+드래그앤 드랍을 구현하기 위한 단계는 다음과 같습니다.
+
+1. 드래그 하려는 노드를 복제
+   - 복제한 노드(떠다니는 노드)를 `draggingNode` 라고 부르겠습니다.
+   - 복제당한 노드(잔상)를 `fixedDragNode` 라고 부르겠습니다.
+2. `draggingNode` 를 document.body위에 붙이고 위치는 absolute로 마우스를 따라다니게 합니다.
+3. 현재 마우스의 위치 확인
+   - 드랍가능한 곳 위에 있는가?
+   - 드랍가능한 곳이 최근 드랍가능했던 곳과 일치하는가?
+   - 더미 드랍노드인가? (칼럼 최하단에 드랍 가능하도록 하기 위해 임의로 추가)
+   - 드랍 가능한 노드의 윗쪽인가? 아랫쪽인가?
+4. 잔상을 여러 시나리오(3번의 갈래길)에 따라 적당한 곳으로 삽입
+5. 마우스를 놓았을 때
+   - 잔상이 있는 곳으로 노드 이동
+
+이제 전체 로직을 하나씩 보겠습니다.
+
+**_STEP 0_**  
+카드에 이벤트를 걸어줍니다.
+
+```js
+this.addEvent('mousedown', '.card-container:not(.modifying)', (e) => {
+  dragEvent.mouseDown(e);
+});
+```
+
+**_STEP 1_**  
+카드에 이벤트를 걸어줍니다. 저는 더블클릭과 드래그 이벤트를 동시에 사용하고 싶어 mouseDown 메소드에 여러가지를 추가하였습니다. [여기](#드래그와-더블클릭-같이-쓰기)를 참조하여 drag메소드 부터 시작합니다.
+
+```js
+drag(event) {
+  const onMouseMoveCallBack = this.onMouseMove.bind(this);
+  this.setDraggingNodeProperty(event);
+  document.addEventListener('mousemove', onMouseMoveCallBack);
+
+  this.$draggingNode.addEventListener('mouseup', () => {
+    this.dragEnd(onMouseMoveCallBack);
+  });
+}
+```
+
+`setDraggingNodeProperty`는 드래그 하려는 노드가 전체 데이터중 몇번째 인덱스에 있는 노드인지 세팅하는 내용입니다. 각자의 데이터 구조에 맞게 세팅하신 후 마지막 `getDraggingNode`를 봐주세요.  
+cloneNode로 target을 복사해준 후 position 설정, 그리고 document.body로 노드를 빼는것입니다.
+
+```js
+setDraggingNodeProperty(event) {
+  const dargTargetProperty = new PropertyFinder(event.target);
+  const {
+    cardContainer: $fixedDragNode,
+    columnIdx: oldColumnIdx,
+    cardIdx: oldCardIdx,
+  } = dargTargetProperty.getAllProperty();
+  this.$fixedDragNode = $fixedDragNode;
+  this.oldColumnIdx = oldColumnIdx;
+  this.oldCardIdx = oldCardIdx;
+  this.$draggingNode = this.getDraggingNode($fixedDragNode);
+}
+//...
+
+getDraggingNode(dragTarget) {
+  const draggingNode = dragTarget.cloneNode(true);
+  draggingNode.classList.add('dragging-move');
+  dragTarget.classList.remove('droppable');
+  dragTarget.classList.add('dragging-fix');
+
+  draggingNode.style.position = 'absolute';
+  draggingNode.style.zIndex = 1000;
+  document.body.append(draggingNode);
+  return draggingNode;
+}
+```
+
+**_STEP 2_**  
+`draggingNode`의 위치를 바꿀 수 있는 메소드를 만들어줍니다. 마우스를 따라다니게 만들기 위함이죠.
+
+```js
+draggingNodeMoveAt(pageX, pageY) {
+  this.$draggingNode.style.left =
+    pageX - this.$draggingNode.offsetWidth / 2 + 'px';
+  this.$draggingNode.style.top =
+    pageY - this.$draggingNode.offsetHeight / 2 + 'px';
+}
+```
+
+이제 다음과 같이 드래깅 노드를 마우스 위치와 동기화 시킵니다.
+
+```js
+onMouseMove(event) {
+  this.draggingNodeMoveAt(event.pageX, event.pageY);
+  //more logic...
+}
+```
+
+**_STEP 3-1_**  
+현재 마우스의 위치 확인: `elementFromPoint`으로 현재 마우스의 위치 아래에 어떠한 요소가 있는지 불러오고 그 요소에서 가장 가까운 카드요소를 찾아줍니다.
+
+```js
+getDroppableBelow(event) {
+  this.$draggingNode.hidden = true;
+  const $elemBelow = document.elementFromPoint(event.clientX, event.clientY);
+  this.$draggingNode.hidden = false;
+  if (!$elemBelow) return;
+  const $droppableBelow = $elemBelow.closest('.droppable');
+  //여기까지 step3-1
+  const rect = $droppableBelow && $droppableBelow.getBoundingClientRect();
+  const isUpperSide = rect && event.clientY < rect.top + rect.height / 2;
+  return { $droppableBelow, isUpperSide };
+}
+```
+
+**_STEP 3-2_**  
+그리고 마우스의 위치와 위에서 찾은 요소의 상태를 비교합니다.
+isNewNodeState : 최근에 만났던 카드와 지금 마우스 아래에 있는 카드가 다른가?  
+isDummyNode : 더미 드라퍼블인가? (더미는 칼럼의 최하단에 위치하고 있으며 더미를 만났을 땐 무조건 위로 삽입해야함)  
+isChangeUpDownSide: 마우스가 요소의 위쪽에 있는가? 아래쪽에 있는가? (위쪽에 있다면 before로 삽입해주고 아래쪽에 있다면 after로 삽입해주기 위함)
+
+```js
+ onMouseMove(event) {
+  //...
+  const { $droppableBelow, isUpperSide } = this.getDroppableBelow(event);
+  if (!$droppableBelow) return;
+  const isNewNodeState = this.$currentDroppable !== $droppableBelow;
+  const isDummyNode = $droppableBelow.classList.contains('dummy-droppable');
+  const isChangeUpDownSide = this.isCurrentSideUpper !== isUpperSide;
+  //...
+}
+```
+
+**_STEP 4_**  
+잔상의 삽입
+
+```js
+onMouseMove(event) {
+  //...
+  if (isNewNodeState) {
+    this.$currentDroppable = $droppableBelow;
+    if (isDummyNode) {
+      $droppableBelow.before(this.$fixedDragNode);
+    } else {
+      if (isUpperSide) $droppableBelow.before(this.$fixedDragNode);
+      else $droppableBelow.after(this.$fixedDragNode);
+      this.isCurrentSideUpper = isUpperSide;
+    }
+  } else {
+    if (isDummyNode) return;
+    if (!isChangeUpDownSide) return;
+    if (isUpperSide) $droppableBelow.before(this.$fixedDragNode);
+    else $droppableBelow.after(this.$fixedDragNode);
+    this.isCurrentSideUpper = isUpperSide;
+  }
+}
+```
+
+**_STEP 5_**  
+마우스를 놓았을 때: 복잡해 보이지만 여태까지 다뤘던 두 노드를 삭제하고 본인의 로직에 맞추어 데이터를 수정 (또는 View의 변경)해주면 됩니다. 핵심로직은 `removeBothDragNode`와
+`TodoListStore.dispatch(ACTION.TRANSFER_CARD, {})` 입니다.
+
+```js
+drag(event) {
+ //...
+  this.$draggingNode.addEventListener('mouseup', () => {
+    this.dragEnd(onMouseMoveCallBack);
+  });
+}
+```
+
+```js
+dragEnd(onMouseMoveCallBack) {
+  const { columnIdx: newColumnIdx, cardIdx: newCardIdx } =
+    this.getIdxOfFixedDragNode();
+  document.removeEventListener('mousemove', onMouseMoveCallBack);
+
+  this.attachReturnAnimation(this.$fixedDragNode, this.$draggingNode);
+  setTimeout(() => {
+    this.removeBothDragNode();
+    TodoListStore.dispatch(ACTION.TRANSFER_CARD, {
+      oldColumnIdx: this.oldColumnIdx,
+      oldCardIdx: this.oldCardIdx,
+      newColumnIdx,
+      newCardIdx,
+    });
+  }, 400);
+}
+```
 
 ---
 
