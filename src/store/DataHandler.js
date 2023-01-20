@@ -125,7 +125,7 @@ export const DataHandler = {
       initialState: newState.columns[oldColumnIdx].title,
       finalState: newState.columns[newColumnIdx].title,
       task: newState.columns[newColumnIdx].cards[newCardIdx].title,
-      actionType: '변경',
+      actionType: '이동',
     };
     newHistorys.unshift(newHistory);
     const columnFrom = newColumns[oldColumnIdx];
