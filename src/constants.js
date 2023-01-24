@@ -10,3 +10,25 @@ export const ACTION = {
   MODIFY_COLUMN_TITLE: 'MODIFY_COLUMN_TITLE',
   TRANSFER_CARD: 'TRANSFER_CARD',
 };
+
+export const CLASS = {
+  TODO_LIST_APP: '.todo-list-container',
+  SIDE_BAR: 'menu',
+  MODAL: '.modal-container',
+  HEADER: '.todo-list-header-container',
+  COLUMN: '.todo-list-column-container',
+  CARD: '.card-container',
+  NEWCARD: '.new-card-container',
+  BTN_NEWCARD: '.column-btn-plus',
+  BTN_DELETE_COLUMN: '.column-btn-x',
+  COLUMN_TITLE: '.todo-list-column-header-text',
+  BTN_DELETE_CARD: '.btn-card-x',
+  CARD_CONTENTS: '.todo-list-contents-container',
+  BTN_CARD_ACCENT: '.btn-accent',
+  BTN_CARD_CANCEL: '.btn-normal',
+  CARD_TITLE: '.todo-list-contents-header-text',
+  BTN_OPEN_SIDEBAR: '.todo-list-header-button',
+  BTN_CLOSE_SIDEBAR: '#btn-history-close',
+  HISTORY: '.history-item',
+  CARD_DETAILS: '.todo-list-contents-desc-container',
+};

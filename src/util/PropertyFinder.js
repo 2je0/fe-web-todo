@@ -1,3 +1,6 @@
+import { CLASS } from '../constants.js';
+import { $, $$ } from './util.js';
+
 export default class PropertyFinder {
   #target;
   #cardContainer;
@@ -7,14 +10,10 @@ export default class PropertyFinder {
   constructor(target) {
     this.#target = target;
     this.#cardContainer =
-      target.closest('.new-card-container') ||
-      target.closest('.card-container');
-    this.#columnContainer = target.closest('.todo-list-column-container');
-    this.#cardContainers =
-      this.#columnContainer.querySelectorAll('.card-container');
-    this.#columnContainers = document.querySelectorAll(
-      '.todo-list-column-container'
-    );
+      target.closest(CLASS.NEWCARD) || target.closest(CLASS.CARD);
+    this.#columnContainer = target.closest(CLASS.COLUMN);
+    this.#cardContainers = $$(CLASS.CARD, this.#columnContainer);
+    this.#columnContainers = $$(CLASS.COLUMN);
   }
   getAllProperty() {
     return {
@@ -40,20 +39,14 @@ export default class PropertyFinder {
     return this.#cardContainer.classList.contains('modifying');
   }
   getTitle() {
-    return this.#cardContainer.querySelector('.todo-list-contents-header-text')
-      .value;
+    return $(CLASS.CARD_TITLE, this.#cardContainer).value;
   }
   getDetails() {
-    const $details = this.#cardContainer.querySelector(
-      '.todo-list-contents-desc-container'
-    );
-    const areaText = $details
-      .querySelector('textarea')
+    const $details = $(CLASS.CARD_DETAILS, this.#cardContainer);
+    const areaText = $('textarea', $details)
       ?.value.split('\n')
       .filter((ele) => ele !== '');
-    const liText = [...$details.querySelectorAll('li')].map(
-      ({ value }) => value
-    );
+    const liText = [...$$('li', $details)].map(({ value }) => value);
     return liText.length ? liText : areaText;
   }
 

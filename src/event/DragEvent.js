@@ -1,6 +1,7 @@
 import { ACTION } from '../constants.js';
 import { TodoListStore } from '../store/TodoListStore.js';
 import PropertyFinder from '../util/PropertyFinder.js';
+import { $ } from '../util/util.js';
 
 class DragEvent {
   DELAY = 400;
@@ -75,7 +76,7 @@ class DragEvent {
   }
 
   getIdxOfFixedDragNode() {
-    const pointTobeDropped = document.querySelector('.dragging-fix');
+    const pointTobeDropped = $('.dragging-fix');
     const currentDroppableProperty = new PropertyFinder(pointTobeDropped);
     return currentDroppableProperty.getAllProperty();
   }

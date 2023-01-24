@@ -3,7 +3,8 @@ import TodoListApp from './components/TodoListApp.js';
 import Sidebar from './components/Sidebar.js';
 import Modal from './components/Modal.js';
 import { TodoListStore } from './store/TodoListStore.js';
-import { ACTION } from './constants.js';
+import { ACTION, CLASS } from './constants.js';
+import { $ } from './util/util.js';
 
 export default class App extends Component {
   setup() {
@@ -21,9 +22,10 @@ export default class App extends Component {
   }
 
   mounted() {
-    const $todoListApp = this.$target.querySelector('.todo-list-container');
-    const $sidebar = this.$target.querySelector('menu');
-    const $modal = this.$target.querySelector('.modal-container');
+    const { $target } = this;
+    const $todoListApp = $(CLASS.TODO_LIST_APP, $target);
+    const $sidebar = $(CLASS.SIDE_BAR, $target);
+    const $modal = $(CLASS.MODAL, $target);
     new Sidebar($sidebar);
     new TodoListApp($todoListApp);
     new Modal($modal);

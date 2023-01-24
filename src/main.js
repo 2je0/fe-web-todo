@@ -1,3 +1,4 @@
 import App from './App.js';
+import { $ } from './util/util.js';
 
-new App(document.querySelector('#app'));
+new App($('#app'));
