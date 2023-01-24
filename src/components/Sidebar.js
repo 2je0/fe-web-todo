@@ -2,7 +2,8 @@ import Component from '../core/Component.js';
 import { TodoListStore } from '../store/TodoListStore.js';
 import BUTTON from './Button.js';
 import History from './History.js';
-
+import { $$, $ } from '../util/util.js';
+import { CLASS } from '../constants.js';
 export default class Sidebar extends Component {
   setup() {
     const { historys } = TodoListStore.getState();
@@ -31,15 +32,15 @@ export default class Sidebar extends Component {
   }
 
   mounted() {
-    const $historys = this.$target.querySelectorAll('.history-item');
+    const $historys = $$(CLASS.HISTORY, this.$target);
     $historys.forEach(($history, idx) => {
       new History($history, { history: this.$state[idx] });
     });
   }
 
   setEvent() {
-    this.addEvent('click', '#btn-history-close', () => {
-      const header = document.querySelector('menu');
+    this.addEvent('click', CLASS.BTN_CLOSE_SIDEBAR, () => {
+      const header = $(CLASS.SIDE_BAR);
       header.classList.add('sidebar-hidden');
     });
   }

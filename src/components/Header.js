@@ -1,4 +1,6 @@
+import { CLASS } from '../constants.js';
 import Component from '../core/Component.js';
+import { $ } from '../util/util.js';
 import BUTTON from './Button.js';
 
 export default class Header extends Component {
@@ -13,13 +15,13 @@ export default class Header extends Component {
     `;
   }
   setEvent() {
-    this.addEvent('click', '.todo-list-header-button', () => {
+    this.addEvent('click', CLASS.BTN_OPEN_SIDEBAR, () => {
       this.showSidebar();
     });
   }
 
   showSidebar() {
-    const header = document.querySelector('menu');
+    const header = $(CLASS.SIDE_BAR);
     header.classList.remove('sidebar-hidden');
   }
 }

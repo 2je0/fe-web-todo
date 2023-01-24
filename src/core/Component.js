@@ -1,3 +1,5 @@
+import { $$ } from '../util/util.js';
+
 export default class Component {
   $target;
   $props;
@@ -24,7 +26,7 @@ export default class Component {
     this.render();
   }
   addEvent(eventType, selector, callback) {
-    const children = [...this.$target.querySelectorAll(selector)];
+    const children = [...$$(selector, this.$target)];
     const isTarget = (target) =>
       children.includes(target) || target.closest(selector);
     this.$target.addEventListener(eventType, (event) => {

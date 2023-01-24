@@ -1,5 +1,7 @@
+import { CLASS } from '../constants.js';
 import Component from '../core/Component.js';
 import { TodoListStore } from '../store/TodoListStore.js';
+import { $, $$ } from '../util/util.js';
 import Column from './Column.js';
 import Header from './Header.js';
 export default class TodoListApp extends Component {
@@ -15,12 +17,11 @@ export default class TodoListApp extends Component {
   }
 
   mounted() {
-    const $header = this.$target.querySelector('.todo-list-header-container');
+    const { $target } = this;
+    const $header = $(CLASS.HEADER, $target);
     new Header($header);
 
-    const $columns = this.$target.querySelectorAll(
-      '.todo-list-column-container'
-    );
+    const $columns = $$(CLASS.COLUMN, $target);
     $columns.forEach(($column, idx) => {
       new Column($column, { columnIdx: idx });
     });

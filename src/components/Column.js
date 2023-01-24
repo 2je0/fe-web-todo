@@ -3,7 +3,8 @@ import Card from './Card.js';
 import NewCard from './NewCard.js';
 import BUTTON from './Button.js';
 import { TodoListStore } from '../store/TodoListStore.js';
-import { ACTION } from '../constants.js';
+import { ACTION, CLASS } from '../constants.js';
+import { $, $$ } from '../util/util.js';
 export default class Column extends Component {
   setup() {
     const { columns } = TodoListStore.getState();
@@ -42,41 +43,42 @@ export default class Column extends Component {
   }
 
   mounted() {
-    const $cards = this.$target.querySelectorAll('.card-container');
+    const { $target, $props, $state } = this;
+    const $cards = $$(CLASS.CARD, $target);
     $cards.forEach(($card, idx) => {
       new Card($card, {
-        columnIdx: this.$props.columnIdx,
+        columnIdx: $props.columnIdx,
         cardIdx: idx,
         reRender: this.render.bind(this),
       });
     });
 
-    const $newCard = this.$target.querySelector('.new-card-container');
-    if (this.$state.addingState) new NewCard($newCard, {});
+    const $newCard = $(CLASS.NEWCARD, $target);
+    if ($state.addingState) new NewCard($newCard, {});
   }
 
   setEvent() {
-    this.addEvent('click', '.column-btn-plus', () => {
+    this.addEvent('click', CLASS.BTN_NEWCARD, () => {
       const { columnIdx } = this.$props;
       TodoListStore.dispatch(ACTION.TOGGLE_NEW_CARD, { columnIdx });
     });
-    this.addEvent('click', '.column-btn-x', () => {
+
+    this.addEvent('click', CLASS.BTN_DELETE_COLUMN, () => {
       const { columnIdx } = this.$props;
       TodoListStore.dispatch(ACTION.DELETE_COLUMN, { columnIdx });
     });
-    this.addEvent('dblclick', '.todo-list-column-header-text', ({ target }) => {
+
+    this.addEvent('dblclick', CLASS.COLUMN_TITLE, ({ target }) => {
       target.readOnly = false;
       target.classList.add('outline');
     });
-    this.addEvent(
-      'keyup',
-      '.todo-list-column-header-text',
-      ({ key, target }) => {
-        if (key !== 'Enter') return;
-        this.exitModifyColumnTitle(target);
-      }
-    );
-    this.addEvent('focusout', '.todo-list-column-header-text', ({ target }) => {
+
+    this.addEvent('keyup', CLASS.COLUMN_TITLE, ({ key, target }) => {
+      if (key !== 'Enter') return;
+      this.exitModifyColumnTitle(target);
+    });
+
+    this.addEvent('focusout', CLASS.COLUMN_TITLE, ({ target }) => {
       this.exitModifyColumnTitle(target);
     });
   }

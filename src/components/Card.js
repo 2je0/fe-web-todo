@@ -4,6 +4,8 @@ import DragEvent from '../event/DragEvent.js';
 import { TodoListStore } from '../store/TodoListStore.js';
 import BUTTON from './Button.js';
 import NewCard from './NewCard.js';
+import { CLASS } from '../constants.js';
+import { $ } from '../util/util.js';
 
 export default class Card extends Component {
   setup() {
@@ -29,25 +31,26 @@ export default class Card extends Component {
   }
 
   setEvent() {
-    this.addEvent('click', '.btn-card-x', () => {
-      const card = this.$target.querySelector('.todo-list-contents-container');
+    const { $target } = this;
+    this.addEvent('click', CLASS.BTN_DELETE_CARD, () => {
+      const card = $(CLASS.CARD_CONTENTS, $target);
       card.classList.add('content-delete');
       modalShow();
     });
 
-    this.addEvent('mouseover', '.btn-card-x', () => {
-      const card = this.$target.querySelector('.todo-list-contents-container');
+    this.addEvent('mouseover', CLASS.BTN_DELETE_CARD, () => {
+      const card = $(CLASS.CARD_CONTENTS, $target);
       card.classList.add('content-delete-hover');
     });
 
-    this.addEvent('mouseout', '.btn-card-x', () => {
-      const card = this.$target.querySelector('.todo-list-contents-container');
+    this.addEvent('mouseout', CLASS.BTN_DELETE_CARD, () => {
+      const card = $(CLASS.CARD_CONTENTS, $target);
       card.classList.remove('content-delete-hover');
     });
-    this.addEvent('dblclick', '.card-container', ({ target }) => {
-      const $card = target.closest('.card-container');
+    this.addEvent('dblclick', CLASS.CARD, ({ target }) => {
+      const $card = target.closest(CLASS.CARD);
       $card.classList.add('modifying');
-      new NewCard(this.$target, {
+      new NewCard($target, {
         card: this.$state,
         reRender: this.$props.reRender,
       });
@@ -55,11 +58,11 @@ export default class Card extends Component {
 
     const dragEvent = new DragEvent();
 
-    this.addEvent('mousedown', '.card-container:not(.modifying)', (e) => {
+    this.addEvent('mousedown', `${CLASS.CARD}:not(.modifying)`, (e) => {
       dragEvent.mouseDown(e);
     });
 
-    this.addEvent('mouseup', '.card-container', () => {
+    this.addEvent('mouseup', CLASS.CARD, () => {
       dragEvent.mouseUp();
     });
   }

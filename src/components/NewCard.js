@@ -1,8 +1,8 @@
-import { ACTION } from '../constants.js';
+import { ACTION, CLASS } from '../constants.js';
 import Component from '../core/Component.js';
 import { TodoListStore } from '../store/TodoListStore.js';
 import PropertyFinder from '../util/PropertyFinder.js';
-import { getNewCard, resizeTextArea } from '../util/util.js';
+import { $, getNewCard, resizeTextArea } from '../util/util.js';
 export default class NewCard extends Component {
   setup() {
     this.$state = this.$props.card || getNewCard();
@@ -43,15 +43,17 @@ export default class NewCard extends Component {
     `;
   }
   mounted() {
-    const { card: cardData } = this.$props;
-    const $accentBtn = this.$target.querySelector('.btn-accent');
+    const { $target, $props } = this;
+    const { card: cardData } = $props;
+    const $accentBtn = $(CLASS.BTN_CARD_ACCENT, $target);
     const title = cardData?.title || '';
     if (title) $accentBtn.disabled = false;
-    resizeTextArea(this.$target.querySelector('textarea'));
+    resizeTextArea($('textarea', $target));
   }
 
   setEvent() {
-    this.addEvent('click', '.btn-accent', ({ target }) => {
+    const { $target, $props } = this;
+    this.addEvent('click', CLASS.BTN_CARD_ACCENT, ({ target }) => {
       const targetProperty = new PropertyFinder(target);
       const { columnIdx, cardIdx, cardData, isModifying } =
         targetProperty.getAllProperty();
@@ -65,20 +67,20 @@ export default class NewCard extends Component {
         TodoListStore.dispatch(ACTION.ADD_CARD, { columnIdx, cardData });
     });
 
-    this.addEvent('click', '.btn-normal', ({ target }) => {
+    this.addEvent('click', CLASS.BTN_CARD_CANCEL, ({ target }) => {
       const targetProperty = new PropertyFinder(target);
       const { isModifying, columnIdx, cardContainer } =
         targetProperty.getAllProperty();
       if (isModifying) {
         cardContainer.classList.remove('modifying');
-        this.$props.reRender();
+        $props.reRender();
         return;
       }
       TodoListStore.dispatch(ACTION.CANCEL_ADDING_STATE, { columnIdx });
     });
 
-    this.addEvent('keyup', '.todo-list-contents-header-text', ({ target }) => {
-      const $btn = this.$target.querySelector('.btn-accent');
+    this.addEvent('keyup', CLASS.CARD_TITLE, ({ target }) => {
+      const $btn = $(CLASS.BTN_CARD_ACCENT, $target);
       if (target.value.trim() !== '') $btn.disabled = false;
       else $btn.disabled = true;
     });
