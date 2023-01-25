@@ -305,6 +305,7 @@ body {
 }
 .hamburger {
   width: 32px;
+  cursor: pointer;
 }
 .sidebarOn {
   position: absolute;

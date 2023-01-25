@@ -37,7 +37,7 @@ function loadingData() {
       });
     });
 
-    columnArray.getColumn().forEach((element, index) => {
+    columnArray.getColumn().forEach((_, index) => {
       initializeColumn(index);
     });
 
