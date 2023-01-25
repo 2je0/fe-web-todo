@@ -1,5 +1,5 @@
 const columnElement = function (name, storageId) {
-  this.name = name || "blank";
+  this.name = name || 'blank';
   this.storageId = storageId;
 };
 columnElement.prototype.getName = function () {
@@ -154,9 +154,9 @@ logStorage.prototype.fixLogArray = function (i, logElement) {
   this.arr[i] = logElement;
 };
 
-logStorage.prototype.testArray = function(){
-  console.log(this.arr)
-}
+logStorage.prototype.testArray = function () {
+  console.log(this.arr);
+};
 
 // 현재 시각
 const columnArray = new columnStorage();
