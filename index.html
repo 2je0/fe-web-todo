@@ -3,7 +3,7 @@
     <head>
     <meta charset = "UTF-8">
     <link rel = "stylesheet" href = "./public/css/style.css" type="text/css"/>
-    <script type = "module" src = './initialize.js'></script>
+    <script type = "module" src = './App.js'></script>
     </head>
     <button id = "plus_list">
         <div class = "circle_side" ></div>
@@ -41,7 +41,10 @@
             <ul id = "card">
                 <div class="flex_between">
                     <TodoItem class = "item_name"></TodoItem>
-                    <button class = "button_x_card"></button>
+                    <div>
+                        <img class = "card_fix" src = "./public/img/pen.png">
+                        <button class = "button_x_card"></button>
+                    </div>                
                 </div>
                 <textarea class = "item_tag"></textarea>
                 <div class = "author_by_web">author by web</div>
@@ -77,8 +80,11 @@
         </template>
 
         <template class = "animated_layer">
-            <div class = "layer">
-
+            <div class = "log_card">
+                <div>
+                    <button class = "button_x_card"></button>
+                    <div id = "sidebar_main"></div>
+                </div>
             </div>
         </template>
 

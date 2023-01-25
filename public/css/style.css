@@ -60,6 +60,7 @@ ul{
     border-color : white;
     background-color : white;
     padding-left : 10px;
+    word-break : break-all;
 }
 .author_by_web{
     font-size : 5px;
@@ -313,9 +314,67 @@ body{
 .hamburger{
     width : 32px;
 }
-.layer{
-    z-index : 10;
+.sidebarOn{
+    position : absolute;
+    display : "";
     height : 100%;
-    width : 20%;
-    background-color : yellow;
+    width : 17%;
+    left : 100%;
+    top : 0%;
+    background-color : white;
+    transform : translatex(-110%);
+    transition : all 2s ease-in-out;
+}
+.card_fix{
+    width:15px;
+    height : 15px;
+    padding-top : 17px;
+    padding-left : 20px;
+}
+.card_hover{
+    background-color : pink;
+    border:solid;
+    border-color:red;
+}
+.card_tag_hover{
+    background-color: pink;
+}
+.card_nothover{
+    border : none
+}
+.card_tag_nothover{
+    background-color: white;
+}
+.log_card{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 16px;
+    gap: 16px;
+
+    width: 332px;
+    height: 137px;
+
+    background: #FFFFFF;
+
+
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+.log_content{
+    width: 244px;
+    height: 46px;
+
+    font-family: 'Noto Sans KR';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 23px;
+
+    color: #010101;
+
+    flex: none;
+    order: 1;
+    flex-grow: 0;
 }
