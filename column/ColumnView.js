@@ -1,16 +1,14 @@
 import { columnElement, columnArray } from '../dataStorage.js';
 import { insertCardDom } from '../card/CardView.js';
-import { innerCircleCount } from '../utils/utils.js';
+import { $, innerCircleCount } from '../utils/utils.js';
 import { fetchPost, fetchPut } from '../utils/fetchUtils.js';
 
 function initializeModal() {
-  let modal_input_location = document.getElementById('main');
-  let [modal_templates] = document.getElementsByClassName('todo_plus_modal');
-  let input_modal = document.importNode(modal_templates.content, true);
-  modal_input_location.appendChild(input_modal);
-
-  let modal_itself = document.getElementById('modal');
-  modal_itself.style.display = 'none';
+  const $main = $('#main');
+  const $modalTemplate = $('.todo_plus_modal');
+  const $modal = document.importNode($modalTemplate.content, true);
+  $main.appendChild($modal);
+  attachModalEvent();
 }
 
 function initializeColumn(i) {
@@ -45,11 +43,11 @@ function makeCardLayout() {
 }
 
 //우측 하단 + 이벤트리스너
-function columnAddBlueButton() {
-  const button = document.getElementById('plus_list');
-  button.addEventListener('click', (event) => {
-    document.getElementById('modal').style.display = '';
-    onload_function();
+function attachFabEvent() {
+  const $fab = $('#plus_list');
+  $fab.addEventListener('click', () => {
+    const $modal = $('#modal');
+    $modal.classList.remove('hidden');
   });
 }
 
@@ -69,18 +67,18 @@ function addColumn() {
   item_plus.addEventListener('click', function (event) {
     insertCardDom(input_card_index);
   });
-  document.getElementById('modal').style.display = 'none';
+  const $modal = $('#modal');
+  $modal.classList.add('hidden');
 }
 
-function onload_function() {
-  let modal_close = document.getElementById('modal_close');
-  modal_close.addEventListener('click', (event) => {
-    document.getElementById('modal').style.display = 'none';
+function attachModalEvent() {
+  const $btnModalClose = $('#modal_close');
+  $btnModalClose.addEventListener('click', () => {
+    const $modal = $('#modal');
+    $modal.classList.add('hidden');
   });
-
-  let modal_plus = document.getElementById('modal_plus');
-
-  modal_plus.addEventListener('click', addColumn);
+  const $btnAddColumn = $('#modal_plus');
+  $btnAddColumn.addEventListener('click', addColumn);
 }
 
 function changeColumnNameEventHandler(columnNameLocation, i, input_name) {
@@ -94,4 +92,4 @@ function changeColumnNameEventHandler(columnNameLocation, i, input_name) {
   });
 }
 
-export { initializeModal, initializeColumn, columnAddBlueButton };
+export { initializeModal, initializeColumn, attachFabEvent };

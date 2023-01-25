@@ -1,93 +1,88 @@
 <!DOCTYPE html>
 <html lang="ko">
-    <head>
-    <meta charset = "UTF-8">
-    <link rel = "stylesheet" href = "./public/css/style.css" type="text/css"/>
-    <script type = "module" src = './App.js'></script>
-    </head>
-    <button id = "plus_list">
-        <div class = "circle_side" ></div>
-        <div class = "circle_side_plus">+</div>
-    </button>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="./public/css/style.css" type="text/css" />
+    <script type="module" src="./App.js"></script>
+  </head>
+  <button id="plus_list">
+    <div class="circle_side"></div>
+    <div class="circle_side_plus">+</div>
+  </button>
 
-    <body style="background-color: rgb(245, 245, 245); padding-left:10vw" ;>
-        <div>
-            <div class = "Title_part">
-                <div id="Title">TO-DO LIST</div>
-                <div class = img_container>
-                    <img class = "hamburger" src = "./public/img/Hamburger_icon.png">
-                </div>
-            </div>
-                <div class="flex_row" id = "main">
-            </div>
-
+  <body style="background-color: rgb(245, 245, 245); padding-left: 10vw" ;>
+    <div>
+      <div class="Title_part">
+        <div id="Title">TO-DO LIST</div>
+        <div class="img_container">
+          <img class="hamburger" src="./public/img/Hamburger_icon.png" />
         </div>
+      </div>
+      <div class="flex_row" id="main"></div>
+    </div>
 
+    <template class="template_list">
+      <div class="flex_between" name="todo_thing">
+        <div class="flex_row">
+          <textarea class="list_name"></textarea>
+          <div class="circle"></div>
+        </div>
+        <div class="flex_row">
+          <button class="button_plus">+</button>
+          <button class="button_x_column"></button>
+        </div>
+      </div>
+    </template>
 
-         <template class="template_list">
-            <div class="flex_between"  name = "todo_thing">
-                <div class="flex_row">
-                    <textarea class = "list_name"></textarea>
-                    <div class="circle"></div>
-                </div>
-                <div class="flex_row">
-                    <button class = "button_plus">+</button>
-                    <button class = "button_x_column"></button>
-                </div>
-            </div>
-         </template>
+    <template class="template_item">
+      <ul id="card">
+        <div class="flex_between">
+          <TodoItem class="item_name"></TodoItem>
+          <div>
+            <img class="card_fix" src="./public/img/pen.png" />
+            <button class="button_x_card"></button>
+          </div>
+        </div>
+        <textarea class="item_tag"></textarea>
+        <div class="author_by_web">author by web</div>
+      </ul>
+    </template>
 
-         <template class="template_item">
-            <ul id = "card">
-                <div class="flex_between">
-                    <TodoItem class = "item_name"></TodoItem>
-                    <div>
-                        <img class = "card_fix" src = "./public/img/pen.png">
-                        <button class = "button_x_card"></button>
-                    </div>                
-                </div>
-                <textarea class = "item_tag"></textarea>
-                <div class = "author_by_web">author by web</div>
-            </ul>
-         </template>
+    <template class="todo_plus_modal hidden">
+      <div id="modal" class="hidden">
+        <div class="modalcontent">
+          <div class="modal_input">
+            <textarea id="item_plus_name"></textarea>
+          </div>
+          <div class="modal_button">
+            <button id="modal_plus">추가</button>
+            <button id="modal_close">취소</button>
+          </div>
+        </div>
+      </div>
+    </template>
 
-         <template class="todo_plus_modal">
-            <div id="modal">
-                <div class="modalcontent">
-                    <div class = "modal_input">        
-                    <textarea id = "item_plus_name"></textarea>
-                </div>
-                <div class = "modal_button">
-                    <button id="modal_plus">추가</button>
-                    <button id="modal_close">취소</button>
-                </div>
-                </div>
-            </div>
-        </template>
+    <template class="card_delete_modal">
+      <div class="card_modal_background">
+        <div class="card_modal">
+          <div class="card_delete_modal_content">
+            <p>선택한 카드를 삭제할까요?</p>
+          </div>
+          <div class="card_modal_button">
+            <button class="card_keep">취소</button>
+            <button class="card_delete">삭제</button>
+          </div>
+        </div>
+      </div>
+    </template>
 
-        <template class="card_delete_modal">
-            <div class = "card_modal_background">
-                <div class = "card_modal">
-                    <div class="card_delete_modal_content">
-                        <p>선택한 카드를 삭제할까요?</p>
-                    </div>
-                    <div class = "card_modal_button">
-                        <button class="card_keep">취소</button>
-                        <button class="card_delete">삭제</button>
-                    </div>
-                </div>
-            </div>
-        </template>
-
-        <template class = "animated_layer">
-            <div class = "log_card">
-                <div>
-                    <button class = "button_x_card"></button>
-                    <div id = "sidebar_main"></div>
-                </div>
-            </div>
-        </template>
-
-    </body>
-
+    <template class="animated_layer">
+      <div class="log_card">
+        <div>
+          <button class="button_x_card"></button>
+          <div id="sidebar_main"></div>
+        </div>
+      </div>
+    </template>
+  </body>
 </html>

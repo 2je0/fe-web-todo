@@ -1,6 +1,6 @@
 import { initializeSidebar } from './Sidebar/AnimatedLayer.js';
 import { addCard, insertCardDom } from './card/CardView.js';
-import { initializeColumn, columnAddBlueButton } from './column/ColumnView.js';
+import { initializeColumn, attachFabEvent } from './column/ColumnView.js';
 import {
   columnElement,
   cardElement,
@@ -42,7 +42,7 @@ function loadingData() {
     });
 
     initializeSidebar();
-    columnAddBlueButton();
+    attachFabEvent();
     columnPlus();
     columnDelete();
   });
